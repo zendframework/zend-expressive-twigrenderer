@@ -12,6 +12,7 @@ namespace Zend\Expressive\Twig;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
+use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
 use Zend\Expressive\Router\RouterInterface;
 
@@ -72,6 +73,14 @@ class TwigRendererFactory
             $environment->addExtension(new TwigExtensionDebug());
         }
 
+        // Add user defined extensions
+        $extensions = isset($config['helpers']['twig']) && is_array($config['helpers']['twig'])
+            ? $config['helpers']['twig'] : [];
+
+        if (!empty($extensions)) {
+            $this->injectHelpers($environment, $container, $extensions);
+        }
+
         // Inject environment
         $twig = new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
 
@@ -85,5 +94,35 @@ class TwigRendererFactory
         }
 
         return $twig;
+    }
+
+    /**
+     * Inject helpers into the TwigEnvironment instance.
+     *
+     * @param TwigEnvironment $environment
+     * @param ContainerInterface $container
+     * @param array $extensions
+     */
+    private function injectHelpers(TwigEnvironment $environment, ContainerInterface $container, array $extensions)
+    {
+        foreach ($extensions as $extension) {
+            // Load the extension from the container
+            if (is_string($extension) && $container->has($extension)) {
+                $extension = $container->get($extension);
+            }
+
+            if (!$extension instanceof Twig_ExtensionInterface) {
+                throw new \Exception(sprintf(
+                    'Twig extension must be an instance of Twig_ExtensionInterface "%s" given,',
+                    is_object($extension) ? get_class($extension) : gettype($extension)
+                ));
+            }
+
+            if ($environment->hasExtension($extension->getName())) {
+                continue;
+            }
+
+            $environment->addExtension($extension);
+        }
     }
 }

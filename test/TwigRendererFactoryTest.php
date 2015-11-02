@@ -17,6 +17,8 @@ use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
+use ZendTest\Expressive\Twig\TestAsset\Extension\FooTwigExtension;
+use ZendTest\Expressive\Twig\TestAsset\Extension\BarTwigExtension;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -239,5 +241,32 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/one', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/two', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/three', null, $paths);
+    }
+
+    public function testInjectsCustomExtensionsIntoTwigEnvironment()
+    {
+        $config = [
+            'templates' => [
+                'helpers' => [
+                    'twig' => [
+                        new FooTwigExtension(),
+                        BarTwigExtension::class,
+                    ],
+                ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(BarTwigExtension::class)->willReturn(true);
+        $this->container->get(BarTwigExtension::class)->willReturn(new BarTwigExtension());
+        $factory = new TwigRendererFactory();
+        $view = $factory($this->container->reveal());
+        $this->assertInstanceOf(TwigRenderer::class, $view);
+        $environment = $this->fetchTwigEnvironment($view);
+        $this->assertTrue($environment->hasExtension('foo-twig-extension'));
+        $this->assertInstanceOf(FooTwigExtension::class, $environment->getExtension('foo-twig-extension'));
+        $this->assertTrue($environment->hasExtension('bar-twig-extension'));
+        $this->assertInstanceOf(BarTwigExtension::class, $environment->getExtension('bar-twig-extension'));
     }
 }
