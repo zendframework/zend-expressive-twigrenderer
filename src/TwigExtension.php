@@ -91,7 +91,7 @@ class TwigExtension extends Twig_Extension
      */
     public function renderAssetUrl($path, $version = null)
     {
-        $assetsVersion = $version | $this->assetsVersion;
+        $assetsVersion = ($version) ? $version : $this->assetsVersion;
 
         return $this->assetsUrl . $path . (($assetsVersion) ? '?v=' . $assetsVersion : '');
     }
