@@ -95,4 +95,13 @@ class TwigExtensionTest extends TestCase
             $extension->renderAssetUrl('foo.png', 'ABC')
         );
     }
+
+    public function testRenderAssetUrlWithoutProvidedVersion()
+    {
+        $extension = $this->createExtension('https://images.example.com/', '');
+        $this->assertSame(
+            'https://images.example.com/foo.png',
+            $extension->renderAssetUrl('foo.png')
+        );
+    }
 }
