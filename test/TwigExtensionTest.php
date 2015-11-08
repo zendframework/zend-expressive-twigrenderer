@@ -92,7 +92,7 @@ class TwigExtensionTest extends TestCase
         $extension = $this->createExtension('https://images.example.com/', 'XYZ');
         $this->assertSame(
             'https://images.example.com/foo.png?v=ABC',
-            $extension->renderAssetUrl('foo.png', null, false, 'ABC')
+            $extension->renderAssetUrl('foo.png', 'ABC')
         );
     }
 }

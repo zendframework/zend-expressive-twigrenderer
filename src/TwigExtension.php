@@ -86,12 +86,10 @@ class TwigExtension extends Twig_Extension
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
      *
      * @param $path
-     * @param null $packageName
-     * @param bool $absolute
      * @param null $version
      * @return string
      */
-    public function renderAssetUrl($path, $packageName = null, $absolute = false, $version = null)
+    public function renderAssetUrl($path, $version = null)
     {
         $assetsVersion = $version | $this->assetsVersion;
 
