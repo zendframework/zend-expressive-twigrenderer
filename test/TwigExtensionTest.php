@@ -92,7 +92,47 @@ class TwigExtensionTest extends TestCase
         $extension = $this->createExtension('https://images.example.com/', 'XYZ');
         $this->assertSame(
             'https://images.example.com/foo.png?v=ABC',
-            $extension->renderAssetUrl('foo.png', null, false, 'ABC')
+            $extension->renderAssetUrl('foo.png', 'ABC')
+        );
+    }
+
+    public function emptyAssetVersions()
+    {
+        return [
+            'null'         => [null],
+            'empty-string' => [''],
+        ];
+    }
+
+    /**
+     * @dataProvider emptyAssetVersions
+     */
+    public function testRenderAssetUrlWithoutProvidedVersion($emptyValue)
+    {
+        $extension = $this->createExtension('https://images.example.com/', $emptyValue);
+        $this->assertSame(
+            'https://images.example.com/foo.png',
+            $extension->renderAssetUrl('foo.png')
+        );
+    }
+
+    public function zeroAssetVersions()
+    {
+        return [
+            'zero'        => [0],
+            'zero-string' => ['0'],
+        ];
+    }
+
+    /**
+     * @dataProvider zeroAssetVersions
+     */
+    public function testRendersZeroVersionAssetUrl($zeroValue)
+    {
+        $extension = $this->createExtension('https://images.example.com/', $zeroValue);
+        $this->assertSame(
+            'https://images.example.com/foo.png?v=0',
+            $extension->renderAssetUrl('foo.png')
         );
     }
 }
