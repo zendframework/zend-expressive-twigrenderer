@@ -44,7 +44,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#4](https://github.com/zendframework/zend-expressive-twigrenderer/pull/4)
+  removes the dependency on zendframework/zend-expressive, and replaces it with
+  zend-framework/zend-expressive-template and
+  zendframework/zend-expressive-router.
 
 ## 0.2.1 - 2015-11-10
 
