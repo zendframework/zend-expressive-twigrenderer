@@ -20,6 +20,7 @@
         "php": ">=5.5",
         "container-interop/container-interop": "^1.1",
         "twig/twig": "^1.19",
+        "zendframework/zend-expressive-router": "^1.0",
         "zendframework/zend-expressive-template": "^1.0"
     },
     "require-dev": {

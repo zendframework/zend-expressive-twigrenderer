@@ -13,7 +13,7 @@ use ArrayObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
-use Zend\Expressive\Exception;
+use Zend\Expressive\Template\Exception;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigRenderer;
 
