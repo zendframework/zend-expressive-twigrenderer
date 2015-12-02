@@ -14,9 +14,12 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplatePath;
+use Zend\Expressive\Twig\Exception\InvalidExtensionException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
+use ZendTest\Expressive\Twig\TestAsset\Extension\FooTwigExtension;
+use ZendTest\Expressive\Twig\TestAsset\Extension\BarTwigExtension;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -239,5 +242,74 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/one', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/two', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/three', null, $paths);
+    }
+
+    public function testInjectsCustomExtensionsIntoTwigEnvironment()
+    {
+        $config = [
+            'templates' => [
+            ],
+            'twig' => [
+                'extensions' => [
+                    new FooTwigExtension(),
+                    BarTwigExtension::class,
+                ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(BarTwigExtension::class)->willReturn(true);
+        $this->container->get(BarTwigExtension::class)->willReturn(new BarTwigExtension());
+        $factory = new TwigRendererFactory();
+        $view = $factory($this->container->reveal());
+        $this->assertInstanceOf(TwigRenderer::class, $view);
+        $environment = $this->fetchTwigEnvironment($view);
+        $this->assertTrue($environment->hasExtension('foo-twig-extension'));
+        $this->assertInstanceOf(FooTwigExtension::class, $environment->getExtension('foo-twig-extension'));
+        $this->assertTrue($environment->hasExtension('bar-twig-extension'));
+        $this->assertInstanceOf(BarTwigExtension::class, $environment->getExtension('bar-twig-extension'));
+    }
+
+    public function invalidExtensions()
+    {
+        return [
+            'null'                  => [null],
+            'true'                  => [true],
+            'false'                 => [false],
+            'zero'                  => [0],
+            'int'                   => [1],
+            'zero-float'            => [0.0],
+            'float'                 => [1.1],
+            'non-service-string'    => ['not-an-extension'],
+            'array'                 => [['not-an-extension']],
+            'non-extensions-object' => [(object) ['extension' => 'not-an-extension']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidExtensions
+     */
+    public function testRaisesExceptionForInvalidExtensions($extension)
+    {
+        $config = [
+            'templates' => [
+            ],
+            'twig' => [
+                'extensions' => [ $extension ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(RouterInterface::class)->willReturn(false);
+
+        if (is_string($extension)) {
+            $this->container->has($extension)->willReturn(false);
+        }
+
+        $factory = new TwigRendererFactory();
+
+        $this->setExpectedException(InvalidExtensionException::class);
+        $factory($this->container->reveal());
     }
 }

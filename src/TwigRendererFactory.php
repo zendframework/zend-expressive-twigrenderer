@@ -12,6 +12,7 @@ namespace Zend\Expressive\Twig;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
+use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
 use Zend\Expressive\Router\RouterInterface;
 
@@ -24,9 +25,6 @@ use Zend\Expressive\Router\RouterInterface;
  * <code>
  * 'debug' => boolean,
  * 'templates' => [
- *     'cache_dir' => 'path to cached templates',
- *     'assets_url' => 'base URL for assets',
- *     'assets_version' => 'base version for assets',
  *     'extension' => 'file extension used by templates; defaults to html.twig',
  *     'paths' => [
  *         // namespace / path pairs
@@ -34,8 +32,20 @@ use Zend\Expressive\Router\RouterInterface;
  *         // Numeric namespaces imply the default/main namespace. Paths may be
  *         // strings or arrays of string paths to associate with the namespace.
  *     ],
- * ]
+ * ],
+ * 'twig' => [
+ *     'cache_dir' => 'path to cached templates',
+ *     'assets_url' => 'base URL for assets',
+ *     'assets_version' => 'base version for assets',
+ *     'extensions' => [
+ *         // extension service names or instances
+ *     ],
+ * ],
  * </code>
+ *
+ * Note: the various keys in the `twig` configuration key can occur in either
+ * that location, or under `templates` (which was the behavior prior to 0.3.0);
+ * the two arrays are merged by the factory.
  */
 class TwigRendererFactory
 {
@@ -47,7 +57,7 @@ class TwigRendererFactory
     {
         $config   = $container->has('config') ? $container->get('config') : [];
         $debug    = array_key_exists('debug', $config) ? (bool) $config['debug'] : false;
-        $config   = isset($config['templates']) ? $config['templates'] : [];
+        $config   = $this->mergeConfig($config);
         $cacheDir = isset($config['cache_dir']) ? $config['cache_dir'] : false;
 
         // Create the engine instance
@@ -72,6 +82,12 @@ class TwigRendererFactory
             $environment->addExtension(new TwigExtensionDebug());
         }
 
+        // Add user defined extensions
+        $extensions = (isset($config['extensions']) && is_array($config['extensions']))
+            ? $config['extensions']
+            : [];
+        $this->injectExtensions($environment, $container, $extensions);
+
         // Inject environment
         $twig = new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
 
@@ -85,5 +101,58 @@ class TwigRendererFactory
         }
 
         return $twig;
+    }
+
+    /**
+     * Inject extensions into the TwigEnvironment instance.
+     *
+     * @param TwigEnvironment $environment
+     * @param ContainerInterface $container
+     * @param array $extensions
+     * @throws Exception\InvalidExtensionException
+     */
+    private function injectExtensions(TwigEnvironment $environment, ContainerInterface $container, array $extensions)
+    {
+        foreach ($extensions as $extension) {
+            // Load the extension from the container
+            if (is_string($extension) && $container->has($extension)) {
+                $extension = $container->get($extension);
+            }
+
+            if (! $extension instanceof Twig_ExtensionInterface) {
+                throw new Exception\InvalidExtensionException(sprintf(
+                    'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
+                    is_object($extension) ? get_class($extension) : gettype($extension)
+                ));
+            }
+
+            if ($environment->hasExtension($extension->getName())) {
+                continue;
+            }
+
+            $environment->addExtension($extension);
+        }
+    }
+
+    /**
+     * Merge expressive templating config with twig config.
+     *
+     * Pulls the `templates` and `twig` top-level keys from the configuration,
+     * if present, and then returns the merged result, with those from the twig
+     * array having precedence.
+     *
+     * @param array $config
+     * @return array
+     */
+    private function mergeConfig(array $config)
+    {
+        $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
+            ? $config['templates']
+            : [];
+        $twigConfig = (isset($config['twig']) && is_array($config['twig']))
+            ? $config['twig']
+            : [];
+
+        return array_replace_recursive($expressiveConfig, $twigConfig);
     }
 }
