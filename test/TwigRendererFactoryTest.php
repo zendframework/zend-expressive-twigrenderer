@@ -14,6 +14,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplatePath;
+use Zend\Expressive\Twig\Exception\InvalidExtensionException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
@@ -247,11 +248,11 @@ class TwigRendererFactoryTest extends TestCase
     {
         $config = [
             'templates' => [
-                'helpers' => [
-                    'twig' => [
-                        new FooTwigExtension(),
-                        BarTwigExtension::class,
-                    ],
+            ],
+            'twig' => [
+                'extensions' => [
+                    new FooTwigExtension(),
+                    BarTwigExtension::class,
                 ],
             ],
         ];
@@ -268,5 +269,47 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertInstanceOf(FooTwigExtension::class, $environment->getExtension('foo-twig-extension'));
         $this->assertTrue($environment->hasExtension('bar-twig-extension'));
         $this->assertInstanceOf(BarTwigExtension::class, $environment->getExtension('bar-twig-extension'));
+    }
+
+    public function invalidExtensions()
+    {
+        return [
+            'null'                  => [null],
+            'true'                  => [true],
+            'false'                 => [false],
+            'zero'                  => [0],
+            'int'                   => [1],
+            'zero-float'            => [0.0],
+            'float'                 => [1.1],
+            'non-service-string'    => ['not-an-extension'],
+            'array'                 => [['not-an-extension']],
+            'non-extensions-object' => [(object) ['extension' => 'not-an-extension']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidExtensions
+     */
+    public function testRaisesExceptionForInvalidExtensions($extension)
+    {
+        $config = [
+            'templates' => [
+            ],
+            'twig' => [
+                'extensions' => [ $extension ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(RouterInterface::class)->willReturn(false);
+
+        if (is_string($extension)) {
+            $this->container->has($extension)->willReturn(false);
+        }
+
+        $factory = new TwigRendererFactory();
+
+        $this->setExpectedException(InvalidExtensionException::class);
+        $factory($this->container->reveal());
     }
 }
