@@ -9,6 +9,7 @@
 
 namespace Zend\Expressive\Twig;
 
+use ArrayObject;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
@@ -141,11 +142,22 @@ class TwigRendererFactory
      * if present, and then returns the merged result, with those from the twig
      * array having precedence.
      *
-     * @param array $config
+     * @param array|ArrayObject $config
      * @return array
+     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
+     *     $config is received.
      */
-    private function mergeConfig(array $config)
+    private function mergeConfig($config)
     {
+        $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
+
+        if (! is_array($config)) {
+            throw new Exception\InvalidConfigException(sprintf(
+                'config service MUST be an array or ArrayObject; received %s',
+                is_object($config) ? get_class($config) : gettype($config)
+            ));
+        }
+
         $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
             ? $config['templates']
             : [];

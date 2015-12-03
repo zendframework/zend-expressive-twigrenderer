@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 0.3.1 - TBD
+## 0.3.1 - 2015-12-03
 
 ### Added
 
@@ -18,7 +18,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#5](https://github.com/zendframework/zend-expressive-twigrenderer/pull/5)
+  fixes an issue in the TwigRendererFactory whereby it failed if the 'config'
+  service returned an `ArrayObject`. It now validates that it has a usable
+  config value, raising an exception when it does not.
 
 ## 0.3.0 - 2015-12-02
 

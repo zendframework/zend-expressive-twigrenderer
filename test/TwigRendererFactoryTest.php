@@ -14,6 +14,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplatePath;
+use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\Exception\InvalidExtensionException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
@@ -310,6 +311,37 @@ class TwigRendererFactoryTest extends TestCase
         $factory = new TwigRendererFactory();
 
         $this->setExpectedException(InvalidExtensionException::class);
+        $factory($this->container->reveal());
+    }
+
+    public function invalidConfiguration()
+    {
+        // @codingStandardsIgnoreStart
+        //                        [Config value,                        Type ]
+        return [
+            'null'             => [null,                                'null'],
+            'true'             => [true,                                'boolean'],
+            'false'            => [false,                               'boolean'],
+            'zero'             => [0,                                   'integer'],
+            'int'              => [1,                                   'integer'],
+            'zero-float'       => [0.0,                                 'double'],
+            'float'            => [1.1,                                 'double'],
+            'string'           => ['not-configuration',                 'string'],
+            'non-array-object' => [(object) ['not' => 'configuration'], 'stdClass'],
+        ];
+        // @codingStandardsIgnoreEnd
+    }
+
+    /**
+     * @depends invalidConfiguration
+     */
+    public function testRaisesExceptionForInvalidConfigService($config, $contains)
+    {
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+
+        $factory = new TwigRendererFactory();
+        $this->setExpectedException(InvalidConfigException::class, $contains);
         $factory($this->container->reveal());
     }
 }
