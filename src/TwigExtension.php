@@ -74,11 +74,14 @@ class TwigExtension extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction('path', [$this, 'renderUri']),
+            new Twig_SimpleFunction('url', [$this, 'renderUrl']),
             new Twig_SimpleFunction('asset', [$this, 'renderAssetUrl']),
         ];
     }
 
     /**
+     * Render relative uri
+     *
      * Usage: {{ path('name', parameters) }}
      *
      * @param null  $route
@@ -91,9 +94,19 @@ class TwigExtension extends Twig_Extension
         return $this->urlHelper->generate($route, $params);
     }
 
-    public function renderAbsoluteUrl($route = null, $params = [])
+    /**
+     * Render absolute url
+     *
+     * Usage: {{ url('article_show', {'slug': article.slug}) }}
+     *
+     * @param null  $route
+     * @param array $params
+     *
+     * @return string
+     */
+    public function renderUrl($route = null, $params = [])
     {
-        return $this->urlHelper->generate($route, $params);
+        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $params));
     }
 
     /**
