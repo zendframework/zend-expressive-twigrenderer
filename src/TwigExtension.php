@@ -11,7 +11,8 @@ namespace Zend\Expressive\Twig;
 
 use Twig_Extension;
 use Twig_SimpleFunction;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Helper\UrlHelper;
 
 /**
  * Twig extension for rendering URLs and assets URLs from Expressive.
@@ -21,9 +22,14 @@ use Zend\Expressive\Router\RouterInterface;
 class TwigExtension extends Twig_Extension
 {
     /**
-     * @var RouterInterface
+     * @var ServerUrlHelper
      */
-    private $router;
+    private $serverUrlHelper;
+
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
 
     /**
      * @var string
@@ -36,18 +42,21 @@ class TwigExtension extends Twig_Extension
     private $assetsVersion;
 
     /**
-     * @param RouterInterface $router
-     * @param string $assetsUrl
-     * @param string $assetsVersion
+     * @param ServerUrlHelper $serverUrlHelper
+     * @param UrlHelper       $urlHelper
+     * @param string          $assetsUrl
+     * @param string          $assetsVersion
      */
     public function __construct(
-        RouterInterface $router,
+        ServerUrlHelper $serverUrlHelper,
+        UrlHelper $urlHelper,
         $assetsUrl,
         $assetsVersion
     ) {
-        $this->router        = $router;
-        $this->assetsUrl     = $assetsUrl;
-        $this->assetsVersion = $assetsVersion;
+        $this->serverUrlHelper = $serverUrlHelper;
+        $this->urlHelper       = $urlHelper;
+        $this->assetsUrl       = $assetsUrl;
+        $this->assetsVersion   = $assetsVersion;
     }
 
     /**
@@ -72,14 +81,19 @@ class TwigExtension extends Twig_Extension
     /**
      * Usage: {{ path('name', parameters) }}
      *
-     * @param $name
-     * @param array $parameters
-     * @param bool $relative
+     * @param null  $route
+     * @param array $params
+     *
      * @return string
      */
-    public function renderUri($name, $parameters = [], $relative = false)
+    public function renderUri($route = null, $params = [])
     {
-        return $this->router->generateUri($name, $parameters);
+        return $this->urlHelper->generate($route, $params);
+    }
+
+    public function renderAbsoluteUrl($route = null, $params = [])
+    {
+        return $this->urlHelper->generate($route, $params);
     }
 
     /**
