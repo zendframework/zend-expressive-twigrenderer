@@ -73,16 +73,18 @@ class TwigExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
+            new Twig_SimpleFunction('absolute_url', [$this, 'generateUrlFromPath']),
+            new Twig_SimpleFunction('asset', [$this, 'renderAssetUrl']),
             new Twig_SimpleFunction('path', [$this, 'renderUri']),
             new Twig_SimpleFunction('url', [$this, 'renderUrl']),
-            new Twig_SimpleFunction('asset', [$this, 'renderAssetUrl']),
         ];
     }
 
     /**
-     * Render relative uri
+     * Render relative uri for a given named route
      *
-     * Usage: {{ path('name', parameters) }}
+     * Usage: {{ path('article_show', {'id': '3'}) }}
+     * Generates: /article/3
      *
      * @param null  $route
      * @param array $params
@@ -95,9 +97,10 @@ class TwigExtension extends Twig_Extension
     }
 
     /**
-     * Render absolute url
+     * Render absolute url for a given named route
      *
-     * Usage: {{ url('article_show', {'slug': article.slug}) }}
+     * Usage: {{ url('article_show', {'slug': 'article.slug'}) }}
+     * Generates: http://example.com/article/article.slug
      *
      * @param null  $route
      * @param array $params
@@ -107,6 +110,21 @@ class TwigExtension extends Twig_Extension
     public function renderUrl($route = null, $params = [])
     {
         return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $params));
+    }
+
+    /**
+     * Generate absolute url from a path
+     *
+     * Usage: {{ absoulte_url('path/to/something') }}
+     * Generates: http://example.com/path/to/something
+     *
+     * @param $path
+     *
+     * @return string
+     */
+    public function generateUrlFromPath($path)
+    {
+        return $this->serverUrlHelper->generate($path);
     }
 
     /**
