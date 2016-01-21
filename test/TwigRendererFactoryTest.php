@@ -228,7 +228,7 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertAttributeSame($config['templates']['extension'], 'suffix', $twig);
     }
 
-    public function testConfiguresPaths()
+    public function testUsesGlobalsConfigurationWhenAddingTwigExtension()
     {
         $config = [
             'templates' => [
@@ -328,6 +328,35 @@ class TwigRendererFactoryTest extends TestCase
 
         $this->setExpectedException(InvalidExtensionException::class);
         $factory($this->container->reveal());
+    }
+
+    public function testConfiguresGlobals()
+    {
+        $config = [
+            'twig' => [
+                'globals' => [
+                    'ga_tracking' => 'UA-XXXXX-X',
+                    'foo' => 'bar',
+                ],
+            ],
+        ];
+        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
+        $urlHelper = $this->prophesize(UrlHelper::class)->reveal();
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->has(UrlHelper::class)->willReturn(true);
+        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
+        $factory = new TwigRendererFactory();
+        $twig = $factory($this->container->reveal());
+
+        $environment = $this->fetchTwigEnvironment($twig);
+        $extension = $environment->getExtension('zend-expressive');
+        $this->assertInstanceOf(TwigExtension::class, $extension);
+        $this->assertAttributeEquals($config['twig']['globals'], 'globals', $extension);
+        $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
+        $this->assertAttributeSame($urlHelper, 'urlHelper', $extension);
     }
 
     public function invalidConfiguration()
