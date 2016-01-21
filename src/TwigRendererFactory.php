@@ -53,10 +53,20 @@ class TwigRendererFactory
     /**
      * @param ContainerInterface $container
      * @return TwigRenderer
+     * @throws Exception\InvalidConfigException for invalid config service values.
      */
     public function __invoke(ContainerInterface $container)
     {
         $config   = $container->has('config') ? $container->get('config') : [];
+
+        if (! is_array($config) && ! $config instanceof ArrayObject) {
+            throw new Exception\InvalidConfigException(sprintf(
+                '"config" service must be an array or ArrayObject for the %s to be able to consume it; received %s',
+                __CLASS__,
+                (is_object($config) ? get_class($config) : gettype($config))
+            ));
+        }
+
         $debug    = array_key_exists('debug', $config) ? (bool) $config['debug'] : false;
         $config   = $this->mergeConfig($config);
         $cacheDir = isset($config['cache_dir']) ? $config['cache_dir'] : false;

@@ -319,7 +319,6 @@ class TwigRendererFactoryTest extends TestCase
         // @codingStandardsIgnoreStart
         //                        [Config value,                        Type ]
         return [
-            'null'             => [null,                                'null'],
             'true'             => [true,                                'boolean'],
             'false'            => [false,                               'boolean'],
             'zero'             => [0,                                   'integer'],
@@ -333,7 +332,7 @@ class TwigRendererFactoryTest extends TestCase
     }
 
     /**
-     * @depends invalidConfiguration
+     * @dataProvider invalidConfiguration
      */
     public function testRaisesExceptionForInvalidConfigService($config, $contains)
     {
