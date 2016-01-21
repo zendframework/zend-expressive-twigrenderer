@@ -11,19 +11,26 @@ namespace ZendTest\Expressive\Twig;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Twig_SimpleFunction as SimpleFunction;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\TwigExtension;
 
 class TwigExtensionTest extends TestCase
 {
     public function setUp()
     {
-        $this->router = $this->prophesize(RouterInterface::class);
+        $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
+        $this->urlHelper = $this->prophesize(UrlHelper::class);
     }
 
     public function createExtension($assetsUrl, $assetsVersion)
     {
-        return new TwigExtension($this->router->reveal(), $assetsUrl, $assetsVersion);
+        return new TwigExtension(
+            $this->serverUrlHelper->reveal(),
+            $this->urlHelper->reveal(),
+            $assetsUrl,
+            $assetsVersion
+        );
     }
 
     public function findFunction($name, array $functions)
@@ -34,6 +41,7 @@ class TwigExtensionTest extends TestCase
                 return $function;
             }
         }
+
         return false;
     }
 
@@ -50,11 +58,13 @@ class TwigExtensionTest extends TestCase
         $this->assertEquals('zend-expressive', $extension->getName());
     }
 
-    public function testRegistersTwigFunctionsForPathAndAsset()
+    public function testRegistersTwigFunctions()
     {
         $extension = $this->createExtension('', '');
         $functions = $extension->getFunctions();
         $this->assertFunctionExists('path', $functions);
+        $this->assertFunctionExists('url', $functions);
+        $this->assertFunctionExists('absolute_url', $functions);
         $this->assertFunctionExists('asset', $functions);
     }
 
@@ -68,17 +78,42 @@ class TwigExtensionTest extends TestCase
             'Received different path function than expected'
         );
         $this->assertSame(
+            [$extension, 'renderUrl'],
+            $this->findFunction('url', $functions)->getCallable(),
+            'Received different url function than expected'
+        );
+        $this->assertSame(
+            [$extension, 'renderUrlFromPath'],
+            $this->findFunction('absolute_url', $functions)->getCallable(),
+            'Received different path function than expected'
+        );
+        $this->assertSame(
             [$extension, 'renderAssetUrl'],
             $this->findFunction('asset', $functions)->getCallable(),
             'Received different asset function than expected'
         );
     }
 
-    public function testRenderUriDelegatesToComposedRouter()
+    public function testRenderUriDelegatesToComposedUrlHelper()
     {
-        $this->router->generateUri('foo', ['id' => 1])->willReturn('URL');
+        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('URL');
         $extension = $this->createExtension('', '');
         $this->assertSame('URL', $extension->renderUri('foo', ['id' => 1]));
+    }
+
+    public function testRenderUrlDelegatesToComposedUrlHelperAndServerUrlHelper()
+    {
+        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('PATH');
+        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $extension = $this->createExtension('', '');
+        $this->assertSame('HOST/PATH', $extension->renderUrl('foo', ['id' => 1]));
+    }
+
+    public function testRenderUrlFromPathDelegatesToComposedServerUrlHelper()
+    {
+        $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
+        $extension = $this->createExtension('', '');
+        $this->assertSame('HOST/PATH', $extension->renderUrlFromPath('PATH'));
     }
 
     public function testRenderAssetUrlUsesComposedAssetUrlAndVersionToGenerateUrl()

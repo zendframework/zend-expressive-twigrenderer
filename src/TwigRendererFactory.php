@@ -15,7 +15,8 @@ use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Helper\UrlHelper;
 
 /**
  * Create and return a Twig template instance.
@@ -80,15 +81,17 @@ class TwigRendererFactory
             'auto_reload'      => $debug
         ]);
 
-        // Add extensions
-        if ($container->has(RouterInterface::class)) {
+        // Add expressive twig extension
+        if ($container->has(ServerUrlHelper::class) && $container->has(UrlHelper::class)) {
             $environment->addExtension(new TwigExtension(
-                $container->get(RouterInterface::class),
+                $container->get(ServerUrlHelper::class),
+                $container->get(UrlHelper::class),
                 isset($config['assets_url']) ? $config['assets_url'] : '',
                 isset($config['assets_version']) ? $config['assets_version'] : ''
             ));
         }
 
+        // Add debug extension
         if ($debug) {
             $environment->addExtension(new TwigExtensionDebug());
         }

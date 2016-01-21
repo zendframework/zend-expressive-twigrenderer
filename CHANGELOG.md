@@ -6,7 +6,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#8](https://github.com/zendframework/zend-expressive-twigrenderer/pull/8)
+  adds `zendframework/zend-expressive-helpers` as a dependency, in order to
+  consume its `UrlHelper` and `ServerUrlHelper` implementations.
+  And adds the ``url`` and ``absolute_url`` twig functions to generate
+  absolute urls for a route and path.
 
 ### Deprecated
 
