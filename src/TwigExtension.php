@@ -122,7 +122,7 @@ class TwigExtension extends Twig_Extension
      *
      * @return string
      */
-    public function renderUrlFromPath($path)
+    public function renderUrlFromPath($path = null)
     {
         return $this->serverUrlHelper->generate($path);
     }

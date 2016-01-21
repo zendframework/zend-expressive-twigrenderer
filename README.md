@@ -30,18 +30,21 @@ The included Twig extension adds support for url generation. The extension is au
 container.
 
 - ``path``: Render the relative path for a given route and parameters.
+  If there is no route, it returns the current path.
 
   ```twig
   {{ path('article_show', {'id': '3'}) }}
   Generates: /article/3
   ```
 - ``url``: Render the absolute url for a given route and parameters.
+  If there is no route, it returns the current url.
 
   ```twig
   {{ url('article_show', {'slug': 'article.slug'}) }}
   Generates: http://example.com/article/article.slug
   ```
-- ``absolute_url``: Render the absolute url from a given path. If the path is empty, it returns the current url.
+- ``absolute_url``: Render the absolute url from a given path.
+  If the path is empty, it returns the current url.
 
   ```twig
   {{ absolute_url('path/to/something') }}
