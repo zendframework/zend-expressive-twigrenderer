@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.1.0 - TBD
+## 1.1.0 - 2016-01-21
 
 ### Added
 
@@ -30,24 +30,6 @@ All notable changes to this project will be documented in this file, in reverse 
      ],
   ],
   ```
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.0.2 - TBD
-
-### Added
-
-- Nothing.
 
 ### Deprecated
 
