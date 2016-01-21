@@ -115,7 +115,7 @@ class TwigExtension extends Twig_Extension
     /**
      * Render absolute url from a path
      *
-     * Usage: {{ absoulte_url('path/to/something') }}
+     * Usage: {{ absolute_url('path/to/something') }}
      * Generates: http://example.com/path/to/something
      *
      * @param $path
@@ -128,7 +128,10 @@ class TwigExtension extends Twig_Extension
     }
 
     /**
+     * Render asset url, optionally versioned
+     *
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
+     * Generates: path/to/asset/name.ext?v=3
      *
      * @param $path
      * @param null $version
