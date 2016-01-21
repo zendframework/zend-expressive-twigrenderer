@@ -12,7 +12,8 @@ namespace ZendTest\Expressive\Twig;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\Exception\InvalidExtensionException;
@@ -103,7 +104,8 @@ class TwigRendererFactoryTest extends TestCase
     public function testCallingFactoryWithNoConfigReturnsTwigInstance()
     {
         $this->container->has('config')->willReturn(false);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
         $this->assertInstanceOf(TwigRenderer::class, $twig);
@@ -125,7 +127,8 @@ class TwigRendererFactoryTest extends TestCase
         $config = ['debug' => true];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -154,7 +157,8 @@ class TwigRendererFactoryTest extends TestCase
         $config = ['templates' => ['cache_dir' => __DIR__]];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -164,10 +168,14 @@ class TwigRendererFactoryTest extends TestCase
 
     public function testAddsTwigExtensionIfRouterIsInContainer()
     {
-        $router = $this->prophesize(RouterInterface::class)->reveal();
+        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
+        $urlHelper = $this->prophesize(UrlHelper::class)->reveal();
         $this->container->has('config')->willReturn(false);
-        $this->container->has(RouterInterface::class)->willReturn(true);
-        $this->container->get(RouterInterface::class)->willReturn($router);
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->has(UrlHelper::class)->willReturn(true);
+        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
+
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -183,11 +191,14 @@ class TwigRendererFactoryTest extends TestCase
                 'assets_version' => 'XYZ',
             ],
         ];
-        $router = $this->prophesize(RouterInterface::class)->reveal();
+        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
+        $urlHelper = $this->prophesize(UrlHelper::class)->reveal();
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(true);
-        $this->container->get(RouterInterface::class)->willReturn($router);
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->has(UrlHelper::class)->willReturn(true);
+        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -196,7 +207,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['templates']['assets_url'], 'assetsUrl', $extension);
         $this->assertAttributeEquals($config['templates']['assets_version'], 'assetsVersion', $extension);
-        $this->assertAttributeSame($router, 'router', $extension);
+        $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
+        $this->assertAttributeSame($urlHelper, 'urlHelper', $extension);
     }
 
     public function testConfiguresTemplateSuffix()
@@ -208,14 +220,15 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
         $this->assertAttributeSame($config['templates']['extension'], 'suffix', $twig);
     }
 
-    public function testConfiguresPaths()
+    public function testUsesGlobalsConfigurationWhenAddingTwigExtension()
     {
         $config = [
             'templates' => [
@@ -224,7 +237,8 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigRendererFactory();
         $twig = $factory($this->container->reveal());
 
@@ -259,7 +273,8 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
         $this->container->has(BarTwigExtension::class)->willReturn(true);
         $this->container->get(BarTwigExtension::class)->willReturn(new BarTwigExtension());
         $factory = new TwigRendererFactory();
@@ -302,7 +317,8 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(RouterInterface::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
 
         if (is_string($extension)) {
             $this->container->has($extension)->willReturn(false);
@@ -312,6 +328,35 @@ class TwigRendererFactoryTest extends TestCase
 
         $this->setExpectedException(InvalidExtensionException::class);
         $factory($this->container->reveal());
+    }
+
+    public function testConfiguresGlobals()
+    {
+        $config = [
+            'twig' => [
+                'globals' => [
+                    'ga_tracking' => 'UA-XXXXX-X',
+                    'foo' => 'bar',
+                ],
+            ],
+        ];
+        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
+        $urlHelper = $this->prophesize(UrlHelper::class)->reveal();
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->has(UrlHelper::class)->willReturn(true);
+        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
+        $factory = new TwigRendererFactory();
+        $twig = $factory($this->container->reveal());
+
+        $environment = $this->fetchTwigEnvironment($twig);
+        $extension = $environment->getExtension('zend-expressive');
+        $this->assertInstanceOf(TwigExtension::class, $extension);
+        $this->assertAttributeEquals($config['twig']['globals'], 'globals', $extension);
+        $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
+        $this->assertAttributeSame($urlHelper, 'urlHelper', $extension);
     }
 
     public function invalidConfiguration()
