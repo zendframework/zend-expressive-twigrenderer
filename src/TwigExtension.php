@@ -42,21 +42,29 @@ class TwigExtension extends Twig_Extension
     private $assetsVersion;
 
     /**
+     * @var array
+     */
+    private $globals;
+
+    /**
      * @param ServerUrlHelper $serverUrlHelper
      * @param UrlHelper       $urlHelper
      * @param string          $assetsUrl
      * @param string          $assetsVersion
+     * @param array           $globals
      */
     public function __construct(
         ServerUrlHelper $serverUrlHelper,
         UrlHelper $urlHelper,
         $assetsUrl,
-        $assetsVersion
+        $assetsVersion,
+        array $globals = []
     ) {
         $this->serverUrlHelper = $serverUrlHelper;
         $this->urlHelper       = $urlHelper;
         $this->assetsUrl       = $assetsUrl;
         $this->assetsVersion   = $assetsVersion;
+        $this->globals         = $globals;
     }
 
     /**
@@ -65,6 +73,11 @@ class TwigExtension extends Twig_Extension
     public function getName()
     {
         return 'zend-expressive';
+    }
+
+    public function getGlobals()
+    {
+        return $this->globals;
     }
 
     /**

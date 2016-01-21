@@ -67,6 +67,32 @@ container.
   Generates: http://example.com/path/to/asset/name.ext?v=3
   ```
 
+## Configuration
+
+```php
+'templates' => [
+    'extension' => 'file extension used by templates; defaults to html.twig',
+    'paths' => [
+        // namespace / path pairs
+        //
+        // Numeric namespaces imply the default/main namespace. Paths may be
+        // strings or arrays of string paths to associate with the namespace.
+    ],
+],
+'twig' => [
+    'cache_dir' => 'path to cached templates',
+    'assets_url' => 'base URL for assets',
+    'assets_version' => 'base version for assets',
+    'extensions' => [
+        // extension service names or instances
+    ],
+    'globals' => [
+        // Global variables passed to twig templates
+        'ga_tracking' => 'UA-XXXXX-X'
+    ],
+],
+```
+
 ## Documentation
 
 See the [zend-expressive](https://github.com/zendframework/zend-expressive/blob/master/doc/book)

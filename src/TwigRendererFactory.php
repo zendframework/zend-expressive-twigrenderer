@@ -42,6 +42,10 @@ use Zend\Expressive\Helper\UrlHelper;
  *     'extensions' => [
  *         // extension service names or instances
  *     ],
+ *     'globals' => [
+ *         // Global variables passed to twig templates
+ *         'ga_tracking' => 'UA-XXXXX-X'
+ *     ],
  * ],
  * </code>
  *
@@ -87,7 +91,8 @@ class TwigRendererFactory
                 $container->get(ServerUrlHelper::class),
                 $container->get(UrlHelper::class),
                 isset($config['assets_url']) ? $config['assets_url'] : '',
-                isset($config['assets_version']) ? $config['assets_version'] : ''
+                isset($config['assets_version']) ? $config['assets_version'] : '',
+                isset($config['globals']) ? $config['globals'] : []
             ));
         }
 
