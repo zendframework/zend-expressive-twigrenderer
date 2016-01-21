@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#9](https://github.com/zendframework/zend-expressive-twigrenderer/pull/9)
+  fixes a skipped test, and updates the behavior of `TwigRendererFactory` to
+  raise an exception if the 'config' service is not an array or `ArrayObject`.
 
 ## 1.0.0 - 2015-12-07
 
