@@ -10,11 +10,11 @@ All notable changes to this project will be documented in this file, in reverse 
   adds `zendframework/zend-expressive-helpers` as a dependency, in order to
   consume its `UrlHelper` and `ServerUrlHelper` implementations.
 
-  Adds the ``url`` and ``absolute_url`` twig functions to generate
+  Adds the `url` and `absolute_url` twig functions to generate
   absolute urls for a route and path.
 
 - [#10](https://github.com/zendframework/zend-expressive-twigrenderer/pull/10)
-  adds config globals being passed to twig templates.
+  adds config globals to pass to all twig templates.
 
   ```php
   'twig' => [
