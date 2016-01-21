@@ -71,9 +71,9 @@ class TwigRendererTest extends TestCase
 
     public function testShouldInjectDefaultLoaderIfProvidedEnvironmentDoesNotComposeOne()
     {
-        $twigEnvironment  = new Twig_Environment();
-        $renderer = new TwigRenderer($twigEnvironment);
-        $loader           = $twigEnvironment->getLoader();
+        $twigEnvironment = new Twig_Environment();
+        $renderer        = new TwigRenderer($twigEnvironment);
+        $loader          = $twigEnvironment->getLoader();
         $this->assertInstanceOf('Twig_Loader_Filesystem', $loader);
     }
 

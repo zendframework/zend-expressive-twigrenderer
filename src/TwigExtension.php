@@ -73,7 +73,7 @@ class TwigExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('absolute_url', [$this, 'generateUrlFromPath']),
+            new Twig_SimpleFunction('absolute_url', [$this, 'renderUrlFromPath']),
             new Twig_SimpleFunction('asset', [$this, 'renderAssetUrl']),
             new Twig_SimpleFunction('path', [$this, 'renderUri']),
             new Twig_SimpleFunction('url', [$this, 'renderUrl']),
@@ -113,7 +113,7 @@ class TwigExtension extends Twig_Extension
     }
 
     /**
-     * Generate absolute url from a path
+     * Render absolute url from a path
      *
      * Usage: {{ absoulte_url('path/to/something') }}
      * Generates: http://example.com/path/to/something
@@ -122,7 +122,7 @@ class TwigExtension extends Twig_Extension
      *
      * @return string
      */
-    public function generateUrlFromPath($path)
+    public function renderUrlFromPath($path)
     {
         return $this->serverUrlHelper->generate($path);
     }
