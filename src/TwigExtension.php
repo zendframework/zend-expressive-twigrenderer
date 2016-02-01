@@ -19,7 +19,7 @@ use Zend\Expressive\Helper\UrlHelper;
  *
  * @author Geert Eltink (https://xtreamwayz.github.io)
  */
-class TwigExtension extends Twig_Extension
+class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     /**
      * @var ServerUrlHelper
