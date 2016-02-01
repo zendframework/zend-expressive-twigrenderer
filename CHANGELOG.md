@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.1.1 - TBD
+## 1.1.1 - 2016-02-01
 
 ### Added
 
@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#11](https://github.com/zendframework/zend-expressive-twigrenderer/pull/11)
+  updates the `TwigExtension` class to implement `Twig_Extension_GlobalsInterface`,
+  which is required starting with Twig 1.23 for forwards-compatibility.
 
 ## 1.1.0 - 2016-01-21
 
