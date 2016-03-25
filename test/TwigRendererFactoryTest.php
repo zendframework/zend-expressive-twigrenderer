@@ -291,7 +291,7 @@ class TwigRendererFactoryTest extends TestCase
     {
         $tz = \DateTimeZone::listIdentifiers()[0];
         $config = [
-            'templates' => [
+            'twig' => [
                 'timezone' => $tz
             ]
         ];
@@ -310,7 +310,7 @@ class TwigRendererFactoryTest extends TestCase
     {
         $tz = 'Luna/Copernicus_Crater';
         $config = [
-            'templates' => [
+            'twig' => [
                 'timezone' => $tz
             ]
         ];
