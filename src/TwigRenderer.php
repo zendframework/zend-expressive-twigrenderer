@@ -18,7 +18,7 @@ use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * Template implementation bridging league/plates
+ * Template implementation bridging twig/twig
  */
 class TwigRenderer implements TemplateRendererInterface
 {
@@ -44,6 +44,7 @@ class TwigRenderer implements TemplateRendererInterface
      *  Constructor
      *
      * @param TwigEnvironment $template
+     * @param string $suffix
      */
     public function __construct(TwigEnvironment $template = null, $suffix = 'html')
     {
@@ -90,7 +91,7 @@ class TwigRenderer implements TemplateRendererInterface
      * @param string $name
      * @param array|object $params
      * @return string
-     * @throws \Zend\Expressive\Exception\InvalidArgumentException for non-array, non-object parameters.
+     * @throws \Zend\Expressive\Template\Exception\InvalidArgumentException for non-array, non-object parameters.
      */
     public function render($name, $params = [])
     {
