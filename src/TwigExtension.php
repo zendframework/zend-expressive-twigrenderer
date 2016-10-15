@@ -102,23 +102,27 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: /article/3?foo=bar#fragment
      *
-     * @param null|string  $route
-     * @param array $params
-     * @param array $query
-     * @param null|string  $fragment
-     * @param bool  $reuseResultParams
+     * @param null|string $route
+     * @param array       $params
+     * @param array       $query
+     * @param null|string $fragment
+     * @param bool        $reuseResultParams
      *
      * @return string
      */
-    public function renderUri($route = null, $params = [], $query = [], $fragment = null)
+    public function renderUri($route = null, $params = [], $query = [], $fragment = null, $reuseResultParams = true)
     {
         $routeParams = [
-            'route' => $params,
-            'query' => $query,
+            'route'    => $params,
+            'query'    => $query,
             'fragment' => $fragment,
         ];
 
-        return $this->urlHelper->generate($route, $routeParams);
+        $options = [
+            'reuse_result_params' => (bool) $reuseResultParams,
+        ];
+
+        return $this->urlHelper->generate($route, $routeParams, $options);
     }
 
     /**
@@ -135,15 +139,19 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      *
      * @return string
      */
-    public function renderUrl($route = null, $params = [], $query = [], $fragment = null)
+    public function renderUrl($route = null, $params = [], $query = [], $fragment = null, $reuseResultParams = true)
     {
         $routeParams = [
-            'route' => $params,
-            'query' => $query,
+            'route'    => $params,
+            'query'    => $query,
             'fragment' => $fragment,
         ];
 
-        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $routeParams));
+        $options = [
+            'reuse_result_params' => (bool) $reuseResultParams,
+        ];
+
+        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $routeParams, $options));
     }
 
     /**
@@ -167,8 +175,9 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
      * Generates: path/to/asset/name.ext?v=3
      *
-     * @param $path
+     * @param      $path
      * @param null $version
+     *
      * @return string
      */
     public function renderAssetUrl($path, $version = null)
