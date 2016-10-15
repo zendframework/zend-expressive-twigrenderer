@@ -99,14 +99,26 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ path('article_show', {'id': '3'}) }}
      * Generates: /article/3
      *
-     * @param null  $route
+     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Generates: /article/3?foo=bar#fragment
+     *
+     * @param null|string  $route
      * @param array $params
+     * @param array $query
+     * @param null|string  $fragment
+     * @param bool  $reuseResultParams
      *
      * @return string
      */
-    public function renderUri($route = null, $params = [])
+    public function renderUri($route = null, $params = [], $query = [], $fragment = null)
     {
-        return $this->urlHelper->generate($route, $params);
+        $routeParams = [
+            'route' => $params,
+            'query' => $query,
+            'fragment' => $fragment,
+        ];
+
+        return $this->urlHelper->generate($route, $routeParams);
     }
 
     /**
@@ -115,14 +127,23 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ url('article_show', {'slug': 'article.slug'}) }}
      * Generates: http://example.com/article/article.slug
      *
+     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Generates: http://example.com/article/3?foo=bar#fragment
+     *
      * @param null  $route
      * @param array $params
      *
      * @return string
      */
-    public function renderUrl($route = null, $params = [])
+    public function renderUrl($route = null, $params = [], $query = [], $fragment = null)
     {
-        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $params));
+        $routeParams = [
+            'route' => $params,
+            'query' => $query,
+            'fragment' => $fragment,
+        ];
+
+        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $routeParams));
     }
 
     /**
