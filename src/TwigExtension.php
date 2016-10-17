@@ -105,7 +105,7 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * @param null|string $route
      * @param array       $routeParams
      * @param array       $queryParams
-     * @param null        $fragmentIdentifier
+     * @param null|string $fragmentIdentifier
      * @param bool        $reuseResultParams
      *
      * @return string
@@ -133,11 +133,11 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: http://example.com/article/3?foo=bar#fragment
      *
-     * @param null  $route
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param null  $fragmentIdentifier
-     * @param bool  $reuseResultParams
+     * @param null|string $route
+     * @param array       $routeParams
+     * @param array       $queryParams
+     * @param null|string $fragmentIdentifier
+     * @param bool        $reuseResultParams
      *
      * @return string
      */
