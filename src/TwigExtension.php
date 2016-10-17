@@ -17,7 +17,7 @@ use Zend\Expressive\Helper\UrlHelper;
 /**
  * Twig extension for rendering URLs and assets URLs from Expressive.
  *
- * @author Geert Eltink (https://xtreamwayz.github.io)
+ * @author Geert Eltink (https://xtreamwayz.com)
  */
 class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
@@ -130,7 +130,7 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ url('article_show', {'slug': 'article.slug'}) }}
      * Generates: http://example.com/article/article.slug
      *
-     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Usage: {{ url('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
      * Generates: http://example.com/article/3?foo=bar#fragment
      *
      * @param null|string $route
@@ -178,8 +178,8 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
      * Generates: path/to/asset/name.ext?v=3
      *
-     * @param      $path
-     * @param null $version
+     * @param string $path
+     * @param null   $version
      *
      * @return string
      */
