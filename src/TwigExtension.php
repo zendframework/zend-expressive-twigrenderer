@@ -103,26 +103,25 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Generates: /article/3?foo=bar#fragment
      *
      * @param null|string $route
-     * @param array       $params
-     * @param array       $query
-     * @param null|string $fragment
+     * @param array       $routeParams
+     * @param array       $queryParams
+     * @param null        $fragmentIdentifier
      * @param bool        $reuseResultParams
      *
      * @return string
      */
-    public function renderUri($route = null, $params = [], $query = [], $fragment = null, $reuseResultParams = true)
-    {
-        $routeParams = [
-            'route'    => $params,
-            'query'    => $query,
-            'fragment' => $fragment,
-        ];
-
+    public function renderUri(
+        $route = null,
+        $routeParams = [],
+        $queryParams = [],
+        $fragmentIdentifier = null,
+        $reuseResultParams = true
+    ) {
         $options = [
             'reuse_result_params' => (bool) $reuseResultParams,
         ];
 
-        return $this->urlHelper->generate($route, $routeParams, $options);
+        return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
     /**
@@ -135,23 +134,27 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Generates: http://example.com/article/3?foo=bar#fragment
      *
      * @param null  $route
-     * @param array $params
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param null  $fragmentIdentifier
+     * @param bool  $reuseResultParams
      *
      * @return string
      */
-    public function renderUrl($route = null, $params = [], $query = [], $fragment = null, $reuseResultParams = true)
-    {
-        $routeParams = [
-            'route'    => $params,
-            'query'    => $query,
-            'fragment' => $fragment,
-        ];
-
+    public function renderUrl(
+        $route = null,
+        $routeParams = [],
+        $queryParams = [],
+        $fragmentIdentifier = null,
+        $reuseResultParams = true
+    ) {
         $options = [
             'reuse_result_params' => (bool) $reuseResultParams,
         ];
 
-        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $routeParams, $options));
+        return $this->serverUrlHelper->generate(
+            $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
+        );
     }
 
     /**
