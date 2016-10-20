@@ -96,14 +96,14 @@ class TwigExtensionTest extends TestCase
 
     public function testRenderUriDelegatesToComposedUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('URL');
+        $this->urlHelper->generate('foo', ['id' => 1], [], null, ['reuse_result_params' => true])->willReturn('URL');
         $extension = $this->createExtension('', '');
         $this->assertSame('URL', $extension->renderUri('foo', ['id' => 1]));
     }
 
     public function testRenderUrlDelegatesToComposedUrlHelperAndServerUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('PATH');
+        $this->urlHelper->generate('foo', ['id' => 1], [], null, ['reuse_result_params' => true])->willReturn('PATH');
         $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
         $extension = $this->createExtension('', '');
         $this->assertSame('HOST/PATH', $extension->renderUrl('foo', ['id' => 1]));
