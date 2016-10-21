@@ -106,7 +106,9 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * @param array       $routeParams
      * @param array       $queryParams
      * @param null|string $fragmentIdentifier
-     * @param bool        $reuseResultParams
+     * @param array       $options      Can have the following keys:
+     *                                  - reuse_result_params (bool): indicates if the current
+     *                                  RouteResult parameters will be used, defaults to true
      *
      * @return string
      */
@@ -115,12 +117,8 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
         $routeParams = [],
         $queryParams = [],
         $fragmentIdentifier = null,
-        $reuseResultParams = true
+        array $options = []
     ) {
-        $options = [
-            'reuse_result_params' => (bool) $reuseResultParams,
-        ];
-
         return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
@@ -137,7 +135,9 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * @param array       $routeParams
      * @param array       $queryParams
      * @param null|string $fragmentIdentifier
-     * @param bool        $reuseResultParams
+     * @param array       $options      Can have the following keys:
+     *                                  - reuse_result_params (bool): indicates if the current
+     *                                  RouteResult parameters will be used, defaults to true
      *
      * @return string
      */
@@ -146,12 +146,8 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
         $routeParams = [],
         $queryParams = [],
         $fragmentIdentifier = null,
-        $reuseResultParams = true
+        array $options = []
     ) {
-        $options = [
-            'reuse_result_params' => (bool) $reuseResultParams,
-        ];
-
         return $this->serverUrlHelper->generate(
             $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
         );
