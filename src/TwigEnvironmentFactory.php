@@ -52,7 +52,7 @@ class TwigEnvironmentFactory
     /**
      * @param ContainerInterface $container
      *
-     * @return TwigRenderer
+     * @return TwigEnvironment
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
     public function __invoke(ContainerInterface $container)

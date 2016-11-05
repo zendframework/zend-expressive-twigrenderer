@@ -9,8 +9,8 @@
 
 namespace Zend\Expressive\Twig;
 
-use Interop\Container\ContainerInterface;
 use ArrayObject;
+use Interop\Container\ContainerInterface;
 
 /**
  * Create and return a Twig template instance.
@@ -49,7 +49,7 @@ class TwigRendererFactory
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 
-        if (!is_array($config)) {
+        if (! is_array($config)) {
             throw new Exception\InvalidConfigException(sprintf(
                 'config service MUST be an array or ArrayObject; received %s',
                 is_object($config) ? get_class($config) : gettype($config)
