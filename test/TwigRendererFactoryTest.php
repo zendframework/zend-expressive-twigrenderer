@@ -18,6 +18,7 @@ use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigEnvironmentFactory;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
+use Twig_Environment as TwigEnvironment;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -104,8 +105,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironmentFactory::class)->willReturn(true);
-        $this->container->get(TwigEnvironmentFactory::class)->willReturn(
+        $this->container->has(TwigEnvironment::class)->willReturn(true);
+        $this->container->get(TwigEnvironment::class)->willReturn(
             $environment($this->container->reveal())
         );
 
@@ -138,8 +139,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironmentFactory::class)->willReturn(true);
-        $this->container->get(TwigEnvironmentFactory::class)->willReturn(
+        $this->container->has(TwigEnvironment::class)->willReturn(true);
+        $this->container->get(TwigEnvironment::class)->willReturn(
             $environment($this->container->reveal())
         );
         $factory = new TwigRendererFactory();
@@ -160,8 +161,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironmentFactory::class)->willReturn(true);
-        $this->container->get(TwigEnvironmentFactory::class)->willReturn(
+        $this->container->has(TwigEnvironment::class)->willReturn(true);
+        $this->container->get(TwigEnvironment::class)->willReturn(
             $environment($this->container->reveal())
         );
         $factory = new TwigRendererFactory();

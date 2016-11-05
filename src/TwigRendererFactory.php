@@ -11,6 +11,7 @@ namespace Zend\Expressive\Twig;
 
 use ArrayObject;
 use Interop\Container\ContainerInterface;
+use Twig_Environment as TwigEnvironment;
 
 /**
  * Create and return a Twig template instance.
@@ -27,7 +28,7 @@ class TwigRendererFactory
     {
         $config      = $container->has('config') ? $container->get('config') : [];
         $config      = $this->mergeConfig($config);
-        $environment = $container->get(TwigEnvironmentFactory::class);
+        $environment = $container->get(TwigEnvironment::class);
 
         return new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
     }
