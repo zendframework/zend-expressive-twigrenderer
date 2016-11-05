@@ -20,7 +20,7 @@
     "require": {
         "php": "^5.5 || ^7.0",
         "container-interop/container-interop": "^1.1",
-        "twig/twig": "^1.19",
+        "twig/twig": "^1.26",
         "zendframework/zend-expressive-helpers": "^1.1 || ^2.0",
         "zendframework/zend-expressive-template": "^1.0"
     },
