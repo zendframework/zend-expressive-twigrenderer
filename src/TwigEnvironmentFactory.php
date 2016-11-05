@@ -140,7 +140,7 @@ class TwigEnvironmentFactory
                 ));
             }
 
-            if ($environment->hasExtension($extension->getName())) {
+            if ($environment->hasExtension(get_class($extension))) {
                 continue;
             }
 

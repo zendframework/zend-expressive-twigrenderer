@@ -88,7 +88,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
-        $this->assertTrue($environment->hasExtension('zend-expressive'));
+        $this->assertTrue($environment->hasExtension(TwigExtension::class));
     }
 
     public function testUsesAssetsConfigurationWhenAddingTwigExtension()
@@ -109,7 +109,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->get(UrlHelper::class)->willReturn($urlHelper);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
-        $extension   = $environment->getExtension('zend-expressive');
+        $extension   = $environment->getExtension(TwigExtension::class);
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['templates']['assets_url'], 'assetsUrl', $extension);
@@ -181,7 +181,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->get(UrlHelper::class)->willReturn($urlHelper);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
-        $extension   = $environment->getExtension('zend-expressive');
+        $extension   = $environment->getExtension(TwigExtension::class);
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['twig']['globals'], 'globals', $extension);
