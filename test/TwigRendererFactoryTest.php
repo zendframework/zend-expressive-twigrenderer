@@ -17,6 +17,7 @@ use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\Exception\InvalidExtensionException;
+use Zend\Expressive\Twig\Exception\InvalidRuntimeLoaderException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
@@ -387,5 +388,82 @@ class TwigRendererFactoryTest extends TestCase
         $factory = new TwigRendererFactory();
         $this->setExpectedException(InvalidConfigException::class, $contains);
         $factory($this->container->reveal());
+    }
+
+    public function invalidRuntimeLoaders()
+    {
+        return [
+            'null'                  => [null],
+            'true'                  => [true],
+            'false'                 => [false],
+            'zero'                  => [0],
+            'int'                   => [1],
+            'zero-float'            => [0.0],
+            'float'                 => [1.1],
+            'non-service-string'    => ['not-an-runtime-loader'],
+            'array'                 => [['not-an-runtime-loader']],
+            'non-extensions-object' => [(object) ['extension' => 'not-an-runtime-loader']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidRuntimeLoaders
+     */
+    public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader)
+    {
+        $config = [
+            'templates' => [
+            ],
+            'twig' => [
+                'runtime_loaders' => [ $runtimeLoader ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+
+        if (is_string($runtimeLoader)) {
+            $this->container->has($runtimeLoader)->willReturn(false);
+        }
+
+        $factory = new TwigRendererFactory();
+
+        $this->setExpectedException(InvalidRuntimeLoaderException::class);
+        $factory($this->container->reveal());
+    }
+
+    public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment()
+    {
+        $fooRuntime = self::prophesize(\Twig_RuntimeLoaderInterface::class);
+        $fooRuntime->load('Test\Runtime\FooRuntime')->willReturn('foo-runtime');
+        $fooRuntime->load('Test\Runtime\BarRuntime')->willReturn(null);
+
+        $barRuntime = self::prophesize(\Twig_RuntimeLoaderInterface::class);
+        $barRuntime->load('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
+        $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
+
+        $config = [
+            'templates' => [
+            ],
+            'twig' => [
+                'runtime_loaders' => [
+                    $fooRuntime->reveal(),
+                    'Test\Runtime\BarRuntimeLoader',
+                ],
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has('Test\Runtime\BarRuntimeLoader')->willReturn(true);
+        $this->container->get('Test\Runtime\BarRuntimeLoader')->willReturn($barRuntime->reveal());
+        $factory = new TwigRendererFactory();
+        $view = $factory($this->container->reveal());
+        $this->assertInstanceOf(TwigRenderer::class, $view);
+        $environment = $this->fetchTwigEnvironment($view);
+        $this->assertEquals('bar-runtime', $environment->getRuntime('Test\Runtime\BarRuntime'));
+        $this->assertEquals('foo-runtime', $environment->getRuntime('Test\Runtime\FooRuntime'));
     }
 }
