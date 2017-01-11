@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.2.0 - TBD
+## 1.2.0 - 2017-01-11
 
 ### Added
 
@@ -86,24 +86,6 @@ All notable changes to this project will be documented in this file, in reverse 
   method; however, as of Twig 1.26, that method is deprecated from
   `Twig_ExtensionInterface`, and no longer used internally. This package's
   factories now use the class name of the extension to perform the checks.
-
-## 1.1.2 - TBD
-
-### Added
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
 
 ## 1.1.1 - 2016-02-01
 
