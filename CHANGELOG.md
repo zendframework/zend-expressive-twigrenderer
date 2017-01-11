@@ -2,6 +2,91 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.2.0 - TBD
+
+### Added
+
+- [#12](https://github.com/zendframework/zend-expressive-twigrenderer/pull/12)
+  adds the ability to provide a default timezone to use with Twig. Provide it
+  via the `twig.timezone` setting:
+
+  ```php
+  return [
+      'twig' => [
+          'timezone' => 'America/Chicago',
+      ],
+  ];
+  ```
+
+- [#15](https://github.com/zendframework/zend-expressive-twigrenderer/pull/15)
+  extracts a new factory, `TwigEnvironmentFactory`, from the
+  `TwigRendererFactory`. This new factory is now responsible for creating and
+  configuring the `Twig_Environment` instance.
+
+  While users may continue to use existing configuration, which omits
+  registration of the `Twig_Environment` service with this new factory, doing so
+  now emits a deprecation notice, indicating they should update their dependency
+  configuration.
+
+  This also means that users may override the `Twig_Environment` service to
+  provide alternate instantiation of that class, or add delegator factories in
+  order to further configure the Twig environment.
+
+- [#23](https://github.com/zendframework/zend-expressive-twigrenderer/pull/23)
+  adds the ability to provide Twig runtime loaders via configuration. These may
+  be provided as either instances or service names, under the
+  `twig.runtime_loaders` setting:
+
+  ```php
+  return [
+      'twig' => [
+          'runtime_loaders' => [
+              // runtime loader service names or instances of
+              // Twig_RuntimeLoaderInterface
+          ],
+      ],
+  ];
+  ```
+
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds support for zend-expressive-helpers 3.0.
+
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds support for zend-expressive-router 2.0.
+
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds new parameters to the included `path()` extension. It now accepts the
+  following arguments:
+
+  ```twig
+  {{ path(
+        'route_name',
+        {'route_param': 'substitution'},
+        {'query_param': 'value'},
+        'fragment',
+        {'reuse_result_params': false}
+  ) }}
+  ```
+
+  The new arguments are the query parameters, fragment, and router options.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#19](https://github.com/zendframework/zend-expressive-twigrenderer/pull/19)
+  fixes how the factories test for prior registration of an extension.
+  Previously, they pulled the extension name using the extension's `getName()`
+  method; however, as of Twig 1.26, that method is deprecated from
+  `Twig_ExtensionInterface`, and no longer used internally. This package's
+  factories now use the class name of the extension to perform the checks.
+
 ## 1.1.2 - TBD
 
 ### Added

@@ -10,7 +10,7 @@ namespace Zend\Expressive\Twig\Exception;
 use DomainException;
 use Interop\Container\Exception\ContainerException;
 
-class InvalidExtensionException extends DomainException implements
+class InvalidRuntimeLoaderException extends DomainException implements
     ContainerException,
     ExceptionInterface
 {

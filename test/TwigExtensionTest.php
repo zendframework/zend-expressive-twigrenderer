@@ -1,10 +1,8 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @see       https://github.com/zendframework/zend-expressive for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
+ * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 namespace ZendTest\Expressive\Twig;
@@ -52,12 +50,6 @@ class TwigExtensionTest extends TestCase
         $this->assertInstanceOf(SimpleFunction::class, $function, $message);
     }
 
-    public function testExtensionIsNamed()
-    {
-        $extension = $this->createExtension('', '');
-        $this->assertEquals('zend-expressive', $extension->getName());
-    }
-
     public function testRegistersTwigFunctions()
     {
         $extension = $this->createExtension('', '');
@@ -96,14 +88,14 @@ class TwigExtensionTest extends TestCase
 
     public function testRenderUriDelegatesToComposedUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('URL');
+        $this->urlHelper->generate('foo', ['id' => 1], [], null, [])->willReturn('URL');
         $extension = $this->createExtension('', '');
         $this->assertSame('URL', $extension->renderUri('foo', ['id' => 1]));
     }
 
     public function testRenderUrlDelegatesToComposedUrlHelperAndServerUrlHelper()
     {
-        $this->urlHelper->generate('foo', ['id' => 1])->willReturn('PATH');
+        $this->urlHelper->generate('foo', ['id' => 1], [], null, [])->willReturn('PATH');
         $this->serverUrlHelper->generate('PATH')->willReturn('HOST/PATH');
         $extension = $this->createExtension('', '');
         $this->assertSame('HOST/PATH', $extension->renderUrl('foo', ['id' => 1]));
