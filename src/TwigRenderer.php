@@ -44,7 +44,7 @@ class TwigRenderer implements TemplateRendererInterface
      *  Constructor
      *
      * @param TwigEnvironment $template
-     * @param string $suffix
+     * @param string          $suffix
      */
     public function __construct(TwigEnvironment $template = null, $suffix = 'html')
     {

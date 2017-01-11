@@ -90,7 +90,7 @@ container.
         // Global variables passed to twig templates
         'ga_tracking' => 'UA-XXXXX-X'
     ],
-    'timezone' => 'default timezone identifier, e.g.: America/New_York'
+    'timezone' => 'default timezone identifier, e.g.: America/New_York',
 ],
 ```
 
