@@ -13,7 +13,6 @@ use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface as TwigExtensionInterface;
-use Twig_Loader_Filesystem as TwigFilesystem;
 use Twig_Loader_Filesystem as TwigLoader;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -126,7 +125,7 @@ class TwigEnvironmentFactory
         $allPaths = isset($config['paths']) && is_array($config['paths']) ? $config['paths'] : [];
         foreach ($allPaths as $namespace => $paths) {
             $namespace = is_numeric($namespace) ? null : $namespace;
-            $namespace = $namespace ?: TwigFilesystem::MAIN_NAMESPACE;
+            $namespace = $namespace ?: TwigLoader::MAIN_NAMESPACE;
             foreach ((array) $paths as $path) {
                 $loader->addPath($path, $namespace);
             }
