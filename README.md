@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer)
 
 Provides [Twig](http://twig.sensiolabs.org/) integration for
-[Expressive](https://github.com/zendframework/zend-expressive).
+[Expressive](https://docs.zendframework.com//zend-expressive/).
 
 ## Installation
 
@@ -20,7 +20,7 @@ can recommend the following implementations:
   `composer require zendframework/zend-servicemanager`
 - [pimple-interop](https://github.com/moufmouf/pimple-interop):
   `composer require mouf/pimple-interop`
-- [Aura.Di](https://github.com/auraphp/Aura.Di)
+- [Aura.Di](https://github.com/auraphp/Aura.Di): `composer require aura/di`
 
 ## Twig Extension
 
@@ -96,4 +96,4 @@ container.
 ## Documentation
 
 See the [zend-expressive](https://github.com/zendframework/zend-expressive/blob/master/doc/book)
-documentation tree, or browse online at http://zend-expressive.rtfd.org.
+documentation tree, or browse online at https://docs.zendframework.com/zend-expressive/features/template/twig/.
