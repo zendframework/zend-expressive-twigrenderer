@@ -1,15 +1,14 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @see       https://github.com/zendframework/zend-expressive for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
+ * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 namespace ZendTest\Expressive\Twig;
 
 use Interop\Container\ContainerInterface;
+use DateTimeZone;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Expressive\Helper\ServerUrlHelper;
@@ -285,6 +284,42 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertInstanceOf(FooTwigExtension::class, $environment->getExtension('foo-twig-extension'));
         $this->assertTrue($environment->hasExtension('bar-twig-extension'));
         $this->assertInstanceOf(BarTwigExtension::class, $environment->getExtension('bar-twig-extension'));
+    }
+
+    public function testUsesTimezoneConfiguration()
+    {
+        $tz = \DateTimeZone::listIdentifiers()[0];
+        $config = [
+            'twig' => [
+                'timezone' => $tz
+            ]
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $factory = new TwigRendererFactory();
+        $twig = $factory($this->container->reveal());
+        $environment = $this->fetchTwigEnvironment($twig);
+        $fetchedTz = $environment->getExtension('core')->getTimezone();
+        $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
+    }
+
+    public function testRaisesExceptionForInvalidTimezone()
+    {
+        $tz = 'Luna/Copernicus_Crater';
+        $config = [
+            'twig' => [
+                'timezone' => $tz
+            ]
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $factory = new TwigRendererFactory();
+        $this->setExpectedException(InvalidConfigException::class);
+        $factory($this->container->reveal());
     }
 
     public function invalidExtensions()

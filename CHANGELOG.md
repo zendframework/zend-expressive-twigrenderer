@@ -6,7 +6,17 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#12](https://github.com/zendframework/zend-expressive-twigrenderer/pull/12)
+  adds the ability to provide a default timezone to use with Twig. Provide it
+  via the `twig.timezone` setting:
+
+  ```php
+  return [
+      'twig' => [
+          'timezone' => 'America/Chicago',
+      ],
+  ];
+  ```
 
 ### Deprecated
 

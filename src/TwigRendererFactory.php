@@ -1,15 +1,14 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @see       https://github.com/zendframework/zend-expressive for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
+ * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
 namespace Zend\Expressive\Twig;
 
 use ArrayObject;
+use DateTimeZone;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
@@ -17,6 +16,7 @@ use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Twig\Exception\InvalidConfigException;
 
 /**
  * Create and return a Twig template instance.
@@ -46,6 +46,7 @@ use Zend\Expressive\Helper\UrlHelper;
  *         // Global variables passed to twig templates
  *         'ga_tracking' => 'UA-XXXXX-X'
  *     ],
+ *     'timezone' => 'default timezone identifier, e.g.: America/New_York'
  * ],
  * </code>
  *
@@ -84,6 +85,19 @@ class TwigRendererFactory
             'strict_variables' => $debug,
             'auto_reload'      => $debug
         ]);
+
+        if (isset($config['timezone'])) {
+            $timezone = $config['timezone'];
+            if (! is_string($timezone)) {
+                throw new InvalidConfigException('"timezone" configuration value must be a string');
+            }
+            try {
+                $timezone = new DateTimeZone($timezone);
+            } catch (\Exception $e) {
+                throw new InvalidConfigException("Unknown or invalid timezone: '{$timezone}'");
+            }
+            $environment->getExtension('core')->setTimezone($timezone);
+        }
 
         // Add expressive twig extension
         if ($container->has(ServerUrlHelper::class) && $container->has(UrlHelper::class)) {
