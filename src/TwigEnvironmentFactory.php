@@ -14,6 +14,7 @@ use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface as TwigExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
+use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 
@@ -40,6 +41,9 @@ use Zend\Expressive\Helper\UrlHelper;
  *     'assets_version' => 'base version for assets',
  *     'extensions' => [
  *         // extension service names or instances
+ *     ],
+ *     'runtime_loaders' => [
+ *         // runtime loaders names or instances
  *     ],
  *     'globals' => [
  *         // Global variables passed to twig templates
@@ -120,6 +124,12 @@ class TwigEnvironmentFactory
             : [];
         $this->injectExtensions($environment, $container, $extensions);
 
+        // Add user defined runtime loaders
+        $runtimeLoaders = (isset($config['runtime_loaders']) && is_array($config['runtime_loaders']))
+            ? $config['runtime_loaders']
+            : [];
+        $this->injectRuntimeLoaders($environment, $container, $runtimeLoaders);
+
         // Add template paths
         $allPaths = isset($config['paths']) && is_array($config['paths']) ? $config['paths'] : [];
         foreach ($allPaths as $namespace => $paths) {
@@ -155,6 +165,78 @@ class TwigEnvironmentFactory
     }
 
     /**
+     * Load an extension.
+     *
+     * If the extension is a string service name, retrieves it from the container.
+     *
+     * If the extension is not a TwigExtensionInterface, raises an exception.
+     *
+     * @param string|TwigExtensionInterface $extension
+     * @param ContainerInterface $container
+     * @return TwigExtensionInterface
+     * @throws Exception\InvalidExtensionException if the extension provided or
+     *     retrieved does not implement TwigExtensionInterface.
+     */
+    private function loadExtension($extension, ContainerInterface $container)
+    {
+        // Load the extension from the container if present
+        if (is_string($extension) && $container->has($extension)) {
+            $extension = $container->get($extension);
+        }
+
+        if (! $extension instanceof TwigExtensionInterface) {
+            throw new Exception\InvalidExtensionException(sprintf(
+                'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
+                is_object($extension) ? get_class($extension) : gettype($extension)
+            ));
+        }
+
+        return $extension;
+    }
+
+    /**
+     * Inject Runtime Loaders into the TwigEnvironment instance.
+     *
+     * @param TwigEnvironment $environment
+     * @param ContainerInterface $container
+     * @param array $runtimeLoaders
+     * @throws Exception\InvalidRuntimeLoaderException if a given runtime loader
+     *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
+     */
+    private function injectRuntimeLoaders(TwigEnvironment $environment, ContainerInterface $container, array $runtimes)
+    {
+        foreach ($runtimes as $runtimeLoader) {
+            $runtimeLoader = $this->loadRuntimeLoader($runtimeLoader, $container);
+            $environment->addRuntimeLoader($runtimeLoader);
+        }
+    }
+
+    /**
+     * @param string|TwigRuntimeLoaderInterface $runtimeLoader
+     * @param ContainerInterface $container
+     * @return TwigRuntimeLoaderInterface
+     * @throws Exception\InvalidRuntimeLoaderException if a given $runtimeLoader
+     *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
+     */
+    private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container)
+    {
+        // Load the runtime loader from the container
+        if (is_string($runtimeLoader) && $container->has($runtimeLoader)) {
+            $runtimeLoader = $container->get($runtimeLoader);
+        }
+
+        if (! $runtimeLoader instanceof TwigRuntimeLoaderInterface) {
+            throw new Exception\InvalidRuntimeLoaderException(sprintf(
+                'Twig runtime loader must be an instance of %s; "%s" given,',
+                TwigRuntimeLoaderInterface::class,
+                is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
+            ));
+        }
+
+        return $runtimeLoader;
+    }
+
+    /**
      * Merge expressive templating config with twig config.
      *
      * Pulls the `templates` and `twig` top-level keys from the configuration,
@@ -185,35 +267,5 @@ class TwigEnvironmentFactory
             : [];
 
         return array_replace_recursive($expressiveConfig, $twigConfig);
-    }
-
-    /**
-     * Load an extension.
-     *
-     * If the extension is a string service name, retrieves it from the container.
-     *
-     * If the extension is not a TwigExtensionInterface, raises an exception.
-     *
-     * @param string|TwigExtensionInterface $extension
-     * @param ContainerInterface $container
-     * @return TwigExtensionInterface
-     * @throws Exception\InvalidExtensionException if the extension provided or
-     *     retrieved does not implement TwigExtensionInterface.
-     */
-    private function loadExtension($extension, ContainerInterface $container)
-    {
-        // Load the extension from the container if present
-        if (is_string($extension) && $container->has($extension)) {
-            $extension = $container->get($extension);
-        }
-
-        if (! $extension instanceof TwigExtensionInterface) {
-            throw new Exception\InvalidExtensionException(sprintf(
-                'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
-                is_object($extension) ? get_class($extension) : gettype($extension)
-            ));
-        }
-
-        return $extension;
     }
 }

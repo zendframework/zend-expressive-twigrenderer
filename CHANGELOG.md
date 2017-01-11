@@ -32,6 +32,22 @@ All notable changes to this project will be documented in this file, in reverse 
   provide alternate instantiation of that class, or add delegator factories in
   order to further configure the Twig environment.
 
+- [#23](https://github.com/zendframework/zend-expressive-twigrenderer/pull/23)
+  adds the ability to provide Twig runtime loaders via configuration. These may
+  be provided as either instances or service names, under the
+  `twig.runtime_loaders` setting:
+
+  ```php
+  return [
+      'twig' => [
+          'runtime_loaders' => [
+              // runtime loader service names or instances of
+              // Twig_RuntimeLoaderInterface
+          ],
+      ],
+  ];
+  ```
+
 ### Deprecated
 
 - Nothing.
