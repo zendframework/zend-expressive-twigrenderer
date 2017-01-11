@@ -52,12 +52,6 @@ class TwigExtensionTest extends TestCase
         $this->assertInstanceOf(SimpleFunction::class, $function, $message);
     }
 
-    public function testExtensionIsNamed()
-    {
-        $extension = $this->createExtension('', '');
-        $this->assertEquals('zend-expressive', $extension->getName());
-    }
-
     public function testRegistersTwigFunctions()
     {
         $extension = $this->createExtension('', '');

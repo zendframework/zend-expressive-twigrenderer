@@ -148,7 +148,7 @@ class TwigEnvironmentFactory
         foreach ($extensions as $extension) {
             $extension = $this->loadExtension($extension, $container);
 
-            if (! $environment->hasExtension($extension->getName())) {
+            if (! $environment->hasExtension(get_class($extension))) {
                 $environment->addExtension($extension);
             }
         }
