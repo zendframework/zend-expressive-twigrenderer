@@ -42,7 +42,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#19](https://github.com/zendframework/zend-expressive-twigrenderer/pull/19)
+  fixes how the factories test for prior registration of an extension.
+  Previously, they pulled the extension name using the extension's `getName()`
+  method; however, as of Twig 1.26, that method is deprecated from
+  `Twig_ExtensionInterface`, and no longer used internally. This package's
+  factories now use the class name of the extension to perform the checks.
 
 ## 1.1.2 - TBD
 

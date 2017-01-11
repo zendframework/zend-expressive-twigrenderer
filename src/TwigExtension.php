@@ -67,14 +67,6 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
         $this->globals         = $globals;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'zend-expressive';
-    }
-
     public function getGlobals()
     {
         return $this->globals;
