@@ -86,6 +86,9 @@ container.
     'extensions' => [
         // extension service names or instances
     ],
+    'runtime_loaders' => [
+        // runtime loaders names or instances   
+    ],
     'globals' => [
         // Global variables passed to twig templates
         'ga_tracking' => 'UA-XXXXX-X'
