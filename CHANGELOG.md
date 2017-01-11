@@ -48,6 +48,28 @@ All notable changes to this project will be documented in this file, in reverse 
   ];
   ```
 
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds support for zend-expressive-helpers 3.0.
+
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds support for zend-expressive-router 2.0.
+
+- [#18](https://github.com/zendframework/zend-expressive-twigrenderer/pull/18)
+  adds new parameters to the included `path()` extension. It now accepts the
+  following arguments:
+
+  ```twig
+  {{ path(
+        'route_name',
+        {'route_param': 'substitution'},
+        {'query_param': 'value'},
+        'fragment',
+        {'reuse_result_params': false}
+  ) }}
+  ```
+
+  The new arguments are the query parameters, fragment, and router options.
+
 ### Deprecated
 
 - Nothing.
