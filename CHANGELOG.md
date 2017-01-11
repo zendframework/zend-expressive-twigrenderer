@@ -18,6 +18,20 @@ All notable changes to this project will be documented in this file, in reverse 
   ];
   ```
 
+- [#15](https://github.com/zendframework/zend-expressive-twigrenderer/pull/15)
+  extracts a new factory, `TwigEnvironmentFactory`, from the
+  `TwigRendererFactory`. This new factory is now responsible for creating and
+  configuring the `Twig_Environment` instance.
+
+  While users may continue to use existing configuration, which omits
+  registration of the `Twig_Environment` service with this new factory, doing so
+  now emits a deprecation notice, indicating they should update their dependency
+  configuration.
+
+  This also means that users may override the `Twig_Environment` service to
+  provide alternate instantiation of that class, or add delegator factories in
+  order to further configure the Twig environment.
+
 ### Deprecated
 
 - Nothing.
