@@ -287,6 +287,42 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertInstanceOf(BarTwigExtension::class, $environment->getExtension('bar-twig-extension'));
     }
 
+    public function testUsesTimezoneConfiguration()
+    {
+        $tz = \DateTimeZone::listIdentifiers()[0];
+        $config = [
+            'twig' => [
+                'timezone' => $tz
+            ]
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $factory = new TwigRendererFactory();
+        $twig = $factory($this->container->reveal());
+        $environment = $this->fetchTwigEnvironment($twig);
+        $fetchedTz = $environment->getExtension('core')->getTimezone();
+        $this->assertEquals(new \DateTimeZone($tz), $fetchedTz);
+    }
+
+    public function testRaisesExceptionForInvalidTimezone()
+    {
+        $tz = 'Luna/Copernicus_Crater';
+        $config = [
+            'twig' => [
+                'timezone' => $tz
+            ]
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $factory = new TwigRendererFactory();
+        $this->setExpectedException(InvalidConfigException::class);
+        $factory($this->container->reveal());
+    }
+
     public function invalidExtensions()
     {
         return [
