@@ -26,9 +26,28 @@ class TwigRendererFactoryTest extends TestCase
      */
     private $container;
 
+    /**
+     * @var callable
+     */
+    private $errorHandler;
+
     public function setUp()
     {
+        $this->restoreErrorHandler();
         $this->container = $this->prophesize(ContainerInterface::class);
+    }
+
+    public function tearDown()
+    {
+        $this->restoreErrorHandler();
+    }
+
+    public function restoreErrorHandler()
+    {
+        if ($this->errorHandler) {
+            restore_error_handler();
+            $this->errorHandler = null;
+        }
     }
 
     public function fetchTwigEnvironment(TwigRenderer $twig)
@@ -182,5 +201,23 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/one', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/two', null, $paths);
         $this->assertPathNamespaceContains(__DIR__ . '/TestAsset/three', null, $paths);
+    }
+
+    public function testCallingFactoryWithoutTwigEnvironmentServiceEmitsDeprecationNotice()
+    {
+        $this->container->has('config')->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(TwigEnvironment::class)->willReturn(false);
+
+        $factory = new TwigRendererFactory();
+
+        $this->errorHandler = set_error_handler(function ($errno, $errstr) {
+            $this->assertContains(TwigEnvironment::class, $errstr);
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        $twig = $factory($this->container->reveal());
+        $this->assertInstanceOf(TwigRenderer::class, $twig);
     }
 }
