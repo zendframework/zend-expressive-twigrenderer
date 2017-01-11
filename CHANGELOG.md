@@ -76,7 +76,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- This release removes support for PHP 5.5.
 
 ### Fixed
 
