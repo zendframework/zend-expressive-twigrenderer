@@ -57,7 +57,6 @@ class TwigEnvironmentFactory
 {
     /**
      * @param ContainerInterface $container
-     *
      * @return TwigEnvironment
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
@@ -138,32 +137,20 @@ class TwigEnvironmentFactory
     /**
      * Inject extensions into the TwigEnvironment instance.
      *
-     * @param TwigEnvironment    $environment
+     * @param TwigEnvironment $environment
      * @param ContainerInterface $container
-     * @param array              $extensions
-     *
-     * @throws Exception\InvalidExtensionException
+     * @param array $extensions
+     * @throws Exception\InvalidExtensionException if any extension provided or
+     *     retrieved does not implement TwigExtensionInterface.
      */
     private function injectExtensions(TwigEnvironment $environment, ContainerInterface $container, array $extensions)
     {
         foreach ($extensions as $extension) {
-            // Load the extension from the container
-            if (is_string($extension) && $container->has($extension)) {
-                $extension = $container->get($extension);
-            }
+            $extension = $this->loadExtension($extension, $container);
 
-            if (! $extension instanceof TwigExtensionInterface) {
-                throw new Exception\InvalidExtensionException(sprintf(
-                    'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
-                    is_object($extension) ? get_class($extension) : gettype($extension)
-                ));
+            if (! $environment->hasExtension($extension->getName())) {
+                $environment->addExtension($extension);
             }
-
-            if ($environment->hasExtension($extension->getName())) {
-                continue;
-            }
-
-            $environment->addExtension($extension);
         }
     }
 
@@ -175,7 +162,6 @@ class TwigEnvironmentFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     *
      * @return array
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
@@ -199,5 +185,35 @@ class TwigEnvironmentFactory
             : [];
 
         return array_replace_recursive($expressiveConfig, $twigConfig);
+    }
+
+    /**
+     * Load an extension.
+     *
+     * If the extension is a string service name, retrieves it from the container.
+     *
+     * If the extension is not a TwigExtensionInterface, raises an exception.
+     *
+     * @param string|TwigExtensionInterface $extension
+     * @param ContainerInterface $container
+     * @return TwigExtensionInterface
+     * @throws Exception\InvalidExtensionException if the extension provided or
+     *     retrieved does not implement TwigExtensionInterface.
+     */
+    private function loadExtension($extension, ContainerInterface $container)
+    {
+        // Load the extension from the container if present
+        if (is_string($extension) && $container->has($extension)) {
+            $extension = $container->get($extension);
+        }
+
+        if (! $extension instanceof TwigExtensionInterface) {
+            throw new Exception\InvalidExtensionException(sprintf(
+                'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
+                is_object($extension) ? get_class($extension) : gettype($extension)
+            ));
+        }
+
+        return $extension;
     }
 }
