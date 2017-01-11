@@ -17,7 +17,7 @@ use Zend\Expressive\Helper\UrlHelper;
 /**
  * Twig extension for rendering URLs and assets URLs from Expressive.
  *
- * @author Geert Eltink (https://xtreamwayz.github.io)
+ * @author Geert Eltink (https://xtreamwayz.com)
  */
 class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
@@ -91,14 +91,27 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ path('article_show', {'id': '3'}) }}
      * Generates: /article/3
      *
-     * @param null  $route
-     * @param array $params
+     * Usage: {{ path('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Generates: /article/3?foo=bar#fragment
+     *
+     * @param null|string $route
+     * @param array       $routeParams
+     * @param array       $queryParams
+     * @param null|string $fragmentIdentifier
+     * @param array       $options      Can have the following keys:
+     *                                  - reuse_result_params (bool): indicates if the current
+     *                                  RouteResult parameters will be used, defaults to true
      *
      * @return string
      */
-    public function renderUri($route = null, $params = [])
-    {
-        return $this->urlHelper->generate($route, $params);
+    public function renderUri(
+        $route = null,
+        $routeParams = [],
+        $queryParams = [],
+        $fragmentIdentifier = null,
+        array $options = []
+    ) {
+        return $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
     /**
@@ -107,14 +120,29 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ url('article_show', {'slug': 'article.slug'}) }}
      * Generates: http://example.com/article/article.slug
      *
-     * @param null  $route
-     * @param array $params
+     * Usage: {{ url('article_show', {'id': '3'}, {'foo': 'bar'}, 'fragment') }}
+     * Generates: http://example.com/article/3?foo=bar#fragment
+     *
+     * @param null|string $route
+     * @param array       $routeParams
+     * @param array       $queryParams
+     * @param null|string $fragmentIdentifier
+     * @param array       $options      Can have the following keys:
+     *                                  - reuse_result_params (bool): indicates if the current
+     *                                  RouteResult parameters will be used, defaults to true
      *
      * @return string
      */
-    public function renderUrl($route = null, $params = [])
-    {
-        return $this->serverUrlHelper->generate($this->urlHelper->generate($route, $params));
+    public function renderUrl(
+        $route = null,
+        $routeParams = [],
+        $queryParams = [],
+        $fragmentIdentifier = null,
+        array $options = []
+    ) {
+        return $this->serverUrlHelper->generate(
+            $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
+        );
     }
 
     /**
@@ -138,8 +166,9 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ asset('path/to/asset/name.ext', version=3) }}
      * Generates: path/to/asset/name.ext?v=3
      *
-     * @param $path
-     * @param null $version
+     * @param string $path
+     * @param null   $version
+     *
      * @return string
      */
     public function renderAssetUrl($path, $version = null)
