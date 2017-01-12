@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.2.1 - TBD
+## 1.2.1 - 2017-01-12
 
 ### Added
 
@@ -18,7 +18,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#26](https://github.com/zendframework/zend-expressive-twigrenderer/pull/26) fixes
+  the zend-expressive-router constrain in composer.json.
 
 ## 1.2.0 - 2017-01-11
 
