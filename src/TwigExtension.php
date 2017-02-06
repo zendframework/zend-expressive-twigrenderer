@@ -170,10 +170,10 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      */
     public function renderAssetUrl($path, $version = null)
     {
-        $assetsVersion = ($version !== null && $version !== '') ? $version : $this->assetsVersion;
+        $assetsVersion = $version !== null && $version !== '' ? $version : $this->assetsVersion;
 
         // One more time, in case $this->assetsVersion was null or an empty string
-        $assetsVersion = ($assetsVersion !== null && $assetsVersion !== '') ? '?v=' . $assetsVersion : '';
+        $assetsVersion = $assetsVersion !== null && $assetsVersion !== '' ? '?v=' . $assetsVersion : '';
 
         return $this->assetsUrl . $path . $assetsVersion;
     }
