@@ -65,6 +65,9 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
         $this->globals         = $globals;
     }
 
+    /**
+     * @return array
+     */
     public function getGlobals()
     {
         return $this->globals;
@@ -99,7 +102,6 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * @param array       $options      Can have the following keys:
      *                                  - reuse_result_params (bool): indicates if the current
      *                                  RouteResult parameters will be used, defaults to true
-     *
      * @return string
      */
     public function renderUri(
@@ -128,7 +130,6 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * @param array       $options      Can have the following keys:
      *                                  - reuse_result_params (bool): indicates if the current
      *                                  RouteResult parameters will be used, defaults to true
-     *
      * @return string
      */
     public function renderUrl(
@@ -149,8 +150,7 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Usage: {{ absolute_url('path/to/something') }}
      * Generates: http://example.com/path/to/something
      *
-     * @param $path
-     *
+     * @param null|string $path
      * @return string
      */
     public function renderUrlFromPath($path = null)
@@ -165,8 +165,7 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
      * Generates: path/to/asset/name.ext?v=3
      *
      * @param string $path
-     * @param null   $version
-     *
+     * @param null|string $version
      * @return string
      */
     public function renderAssetUrl($path, $version = null)
