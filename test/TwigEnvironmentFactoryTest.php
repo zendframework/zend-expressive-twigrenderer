@@ -153,8 +153,7 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testRaisesExceptionForInvalidExtensions($extension)
     {
         $config = [
-            'templates' => [
-            ],
+            'templates' => [],
             'twig'      => [
                 'extensions' => [$extension],
             ],
@@ -204,8 +203,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     public function invalidConfiguration()
     {
-        // @codingStandardsIgnoreStart
-        //                        [Config value,                        Type ]
+        //                        [Config value, Type]
         return [
             'true'             => [true, 'boolean'],
             'false'            => [false, 'boolean'],
@@ -216,7 +214,6 @@ class TwigEnvironmentFactoryTest extends TestCase
             'string'           => ['not-configuration', 'string'],
             'non-array-object' => [(object) ['not' => 'configuration'], 'stdClass'],
         ];
-        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -241,8 +238,8 @@ class TwigEnvironmentFactoryTest extends TestCase
         $tz = DateTimeZone::listIdentifiers()[0];
         $config = [
             'twig' => [
-                'timezone' => $tz
-            ]
+                'timezone' => $tz,
+            ],
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
@@ -259,8 +256,8 @@ class TwigEnvironmentFactoryTest extends TestCase
         $tz = 'Luna/Copernicus_Crater';
         $config = [
             'twig' => [
-                'timezone' => $tz
-            ]
+                'timezone' => $tz,
+            ],
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
@@ -296,10 +293,9 @@ class TwigEnvironmentFactoryTest extends TestCase
     public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader)
     {
         $config = [
-            'templates' => [
-            ],
+            'templates' => [],
             'twig' => [
-                'runtime_loaders' => [ $runtimeLoader ],
+                'runtime_loaders' => [$runtimeLoader],
             ],
         ];
         $this->container->has('config')->willReturn(true);
@@ -328,8 +324,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
 
         $config = [
-            'templates' => [
-            ],
+            'templates' => [],
             'twig' => [
                 'runtime_loaders' => [
                     $fooRuntime->reveal(),
