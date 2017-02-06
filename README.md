@@ -128,5 +128,4 @@ are registered with the container.
 
 ## Documentation
 
-See the [zend-expressive](https://github.com/zendframework/zend-expressive/blob/master/doc/book)
-documentation tree, or browse online at https://docs.zendframework.com/zend-expressive/features/template/twig/.
+See the Expressive [Twig documentation](https://docs.zendframework.com/zend-expressive/features/template/twig/).
