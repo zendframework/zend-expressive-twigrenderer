@@ -315,11 +315,11 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment()
     {
-        $fooRuntime = self::prophesize(TwigRuntimeLoaderInterface::class);
+        $fooRuntime = $this->prophesize(TwigRuntimeLoaderInterface::class);
         $fooRuntime->load('Test\Runtime\FooRuntime')->willReturn('foo-runtime');
         $fooRuntime->load('Test\Runtime\BarRuntime')->willReturn(null);
 
-        $barRuntime = self::prophesize(TwigRuntimeLoaderInterface::class);
+        $barRuntime = $this->prophesize(TwigRuntimeLoaderInterface::class);
         $barRuntime->load('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
         $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
 
