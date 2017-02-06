@@ -29,7 +29,7 @@ class TwigRendererTest extends TestCase
 
     public function setUp()
     {
-        $this->twigFilesystem  = new Twig_Loader_Filesystem;
+        $this->twigFilesystem  = new Twig_Loader_Filesystem();
         $this->twigEnvironment = new Twig_Environment($this->twigFilesystem);
     }
 
