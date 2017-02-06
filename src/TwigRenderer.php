@@ -39,8 +39,6 @@ class TwigRenderer implements TemplateRendererInterface
     protected $template;
 
     /**
-     *  Constructor
-     *
      * @param TwigEnvironment $template
      * @param string          $suffix
      */
@@ -108,7 +106,8 @@ class TwigRenderer implements TemplateRendererInterface
      * Add a path for template
      *
      * @param string $path
-     * @param string $namespace
+     * @param null|string $namespace
+     * @return void
      */
     public function addPath($path, $namespace = null)
     {

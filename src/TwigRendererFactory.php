@@ -19,7 +19,6 @@ class TwigRendererFactory
 {
     /**
      * @param ContainerInterface $container
-     *
      * @return TwigRenderer
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
@@ -40,7 +39,6 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     *
      * @return array
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
