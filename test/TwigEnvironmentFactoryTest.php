@@ -9,7 +9,8 @@ namespace ZendTest\Expressive\Twig;
 
 use Interop\Container\ContainerInterface;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ProphecyInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
@@ -23,7 +24,7 @@ use Zend\Expressive\Twig\TwigExtension;
 class TwigEnvironmentFactoryTest extends TestCase
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|ProphecyInterface
      */
     private $container;
 
@@ -63,6 +64,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @depends testCallingFactoryWithNoConfigReturnsTwigEnvironmentInstance
+     *
+     * @param TwigEnvironment $environment
      */
     public function testDebugDisabledSetsUpEnvironmentForProduction(TwigEnvironment $environment)
     {
@@ -144,6 +147,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidExtensions
+     *
+     * @param mixed $extension
      */
     public function testRaisesExceptionForInvalidExtensions($extension)
     {
@@ -165,7 +170,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $factory = new TwigEnvironmentFactory();
 
-        $this->setExpectedException(InvalidExtensionException::class);
+        $this->expectException(InvalidExtensionException::class);
         $factory($this->container->reveal());
     }
 
@@ -216,6 +221,9 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidConfiguration
+     *
+     * @param mixed $config
+     * @param string $contains
      */
     public function testRaisesExceptionForInvalidConfigService($config, $contains)
     {
@@ -223,7 +231,8 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->get('config')->willReturn($config);
         $factory = new TwigEnvironmentFactory();
 
-        $this->setExpectedException(InvalidConfigException::class, $contains);
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage($contains);
         $factory($this->container->reveal());
     }
 
@@ -258,7 +267,8 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigEnvironmentFactory();
-        $this->setExpectedException(InvalidConfigException::class);
+
+        $this->expectException(InvalidConfigException::class);
         $factory($this->container->reveal());
     }
 
@@ -280,6 +290,8 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     /**
      * @dataProvider invalidRuntimeLoaders
+     *
+     * @param mixed $runtimeLoader
      */
     public function testRaisesExceptionForInvalidRuntimeLoaders($runtimeLoader)
     {
@@ -301,7 +313,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $factory = new TwigEnvironmentFactory();
 
-        $this->setExpectedException(InvalidRuntimeLoaderException::class);
+        $this->expectException(InvalidRuntimeLoaderException::class);
         $factory($this->container->reveal());
     }
 
