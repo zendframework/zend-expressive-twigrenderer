@@ -5,14 +5,15 @@ language: php
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.local
     - vendor
 
 env:
   global:
     - COMPOSER_ARGS="--no-interaction"
+    - COVERAGE_DEPS="satooshi/php-coveralls"
 
 matrix:
-  fast_finish: false
   include:
     - php: 5.6
       env:
@@ -20,7 +21,7 @@ matrix:
     - php: 5.6
       env:
         - DEPS=locked
-        - CS_CHECK=true
+        - TEST_COVERAGE=true
     - php: 5.6
       env:
         - DEPS=latest
@@ -30,6 +31,7 @@ matrix:
     - php: 7
       env:
         - DEPS=locked
+        - CS_CHECK=true
     - php: 7
       env:
         - DEPS=latest
@@ -55,18 +57,23 @@ matrix:
     - php: hhvm
 
 before_install:
+  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - travis_retry composer self-update
 
 install:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
-  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest $COMPOSER_ARGS ; fi
+  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
 
 script:
-  - composer test
-  - if [[ $CS_CHECK == 'true' ]]; then composer cs ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+  - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer license-check ; fi
+
+after_script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi
 
 notifications:
   irc: "irc.freenode.org#zftalk.dev"
