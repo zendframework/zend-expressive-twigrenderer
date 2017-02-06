@@ -8,7 +8,6 @@
 namespace ZendTest\Expressive\Twig;
 
 use Interop\Container\ContainerInterface;
-use DateTimeZone;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Expressive\Helper\ServerUrlHelper;

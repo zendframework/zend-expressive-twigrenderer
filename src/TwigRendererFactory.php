@@ -8,7 +8,6 @@
 namespace Zend\Expressive\Twig;
 
 use ArrayObject;
-use DateTimeZone;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 
