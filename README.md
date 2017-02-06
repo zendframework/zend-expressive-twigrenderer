@@ -1,6 +1,7 @@
 # Twig Integration for Expressive
 
 [![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer)
+[![Coverage Status](https://coveralls.io/repos/zendframework/zend-expressive-twigrenderer/badge.svg?branch=master)](https://coveralls.io/r/zendframework/zend-expressive-twigrenderer?branch=master)
 
 Provides [Twig](http://twig.sensiolabs.org/) integration for
 [Expressive](https://docs.zendframework.com//zend-expressive/).
