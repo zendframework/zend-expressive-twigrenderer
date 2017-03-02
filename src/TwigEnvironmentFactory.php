@@ -11,6 +11,7 @@ use ArrayObject;
 use DateTimeZone;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
+use Twig_Extension_Core as TwigExtensionCore;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface as TwigExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
@@ -99,7 +100,7 @@ class TwigEnvironmentFactory
             } catch (\Exception $e) {
                 throw new Exception\InvalidConfigException(sprintf('Unknown or invalid timezone: "%s"', $timezone));
             }
-            $environment->getExtension('core')->setTimezone($timezone);
+            $environment->getExtension(TwigExtensionCore::class)->setTimezone($timezone);
         }
 
         // Add expressive twig extension

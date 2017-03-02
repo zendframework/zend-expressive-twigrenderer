@@ -12,6 +12,7 @@ use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Twig_Environment as TwigEnvironment;
+use Twig_Extension_Core as TwigExtensionCore;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -247,7 +248,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
-        $fetchedTz = $environment->getExtension('core')->getTimezone();
+        $fetchedTz = $environment->getExtension(TwigExtensionCore::class)->getTimezone();
         $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
     }
 
