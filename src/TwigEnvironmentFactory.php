@@ -150,6 +150,7 @@ class TwigEnvironmentFactory
      * @param TwigEnvironment $environment
      * @param ContainerInterface $container
      * @param array $extensions
+     * @return void
      * @throws Exception\InvalidExtensionException if any extension provided or
      *     retrieved does not implement TwigExtensionInterface.
      */
@@ -199,7 +200,8 @@ class TwigEnvironmentFactory
      *
      * @param TwigEnvironment $environment
      * @param ContainerInterface $container
-     * @param array $runtimeLoaders
+     * @param array $runtimes
+     * @return void
      * @throws Exception\InvalidRuntimeLoaderException if a given runtime loader
      *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
      */

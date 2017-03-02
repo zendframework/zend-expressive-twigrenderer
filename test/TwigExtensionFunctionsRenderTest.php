@@ -7,7 +7,7 @@
 
 namespace ZendTest\Expressive\Twig;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Twig_Environment;
 use Twig_Loader_Array;
 use Twig_LoaderInterface;
@@ -34,6 +34,8 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     }
 
     /**
+     * @param string $assetsUrl
+     * @param string $assetsVersion
      * @return Twig_Environment
      */
     protected function getTwigEnvironment($assetsUrl = '', $assetsVersion = '')
@@ -60,6 +62,13 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderPathProvider
+     *
+     * @param string $template
+     * @param string $route
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param null|string $fragment
+     * @param array $options
      */
     public function testPathFunction(
         $template,
@@ -127,6 +136,13 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderUrlProvider
+     *
+     * @param string $template
+     * @param string $route
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param null|string $fragment
+     * @param array $options
      */
     public function testUrlFunction(
         $template,
