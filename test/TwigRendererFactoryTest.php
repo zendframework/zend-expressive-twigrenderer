@@ -8,8 +8,8 @@
 namespace ZendTest\Expressive\Twig;
 
 use Interop\Container\ContainerInterface;
-use DateTimeZone;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ProphecyInterface;
 use ReflectionProperty;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -22,7 +22,7 @@ use Twig_Environment as TwigEnvironment;
 class TwigRendererFactoryTest extends TestCase
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|ProphecyInterface
      */
     private $container;
 
@@ -137,6 +137,8 @@ class TwigRendererFactoryTest extends TestCase
 
     /**
      * @depends testCallingFactoryWithNoConfigReturnsTwigInstance
+     *
+     * @param TwigRenderer $twig
      */
     public function testUnconfiguredTwigInstanceContainsNoPaths(TwigRenderer $twig)
     {

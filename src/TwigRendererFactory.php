@@ -8,7 +8,6 @@
 namespace Zend\Expressive\Twig;
 
 use ArrayObject;
-use DateTimeZone;
 use Interop\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 
@@ -19,7 +18,6 @@ class TwigRendererFactory
 {
     /**
      * @param ContainerInterface $container
-     *
      * @return TwigRenderer
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
@@ -40,7 +38,6 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     *
      * @return array
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
@@ -56,10 +53,10 @@ class TwigRendererFactory
             ));
         }
 
-        $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
+        $expressiveConfig = isset($config['templates']) && is_array($config['templates'])
             ? $config['templates']
             : [];
-        $twigConfig       = (isset($config['twig']) && is_array($config['twig']))
+        $twigConfig       = isset($config['twig']) && is_array($config['twig'])
             ? $config['twig']
             : [];
 

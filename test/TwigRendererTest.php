@@ -8,7 +8,7 @@
 namespace ZendTest\Expressive\Twig;
 
 use ArrayObject;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 use Zend\Expressive\Template\Exception;
@@ -24,12 +24,12 @@ class TwigRendererTest extends TestCase
 
     /**
      * @var Twig_Environment
-    */
+     */
     private $twigEnvironment;
 
     public function setUp()
     {
-        $this->twigFilesystem  = new Twig_Loader_Filesystem;
+        $this->twigFilesystem  = new Twig_Loader_Filesystem();
         $this->twigEnvironment = new Twig_Environment($this->twigFilesystem);
     }
 
@@ -95,7 +95,7 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset');
         $paths = $renderer->getPaths();
         $this->assertInternalType('array', $paths);
-        $this->assertEquals(1, count($paths));
+        $this->assertCount(1, $paths);
         $this->assertTemplatePath(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertTemplatePathString(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertEmptyTemplatePathNamespace($paths[0]);
@@ -107,7 +107,7 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset', 'test');
         $paths = $renderer->getPaths();
         $this->assertInternalType('array', $paths);
-        $this->assertEquals(1, count($paths));
+        $this->assertCount(1, $paths);
         $this->assertTemplatePath(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertTemplatePathString(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertTemplatePathNamespace('test', $paths[0]);
@@ -140,11 +140,13 @@ class TwigRendererTest extends TestCase
 
     /**
      * @dataProvider invalidParameterValues
+     *
+     * @param mixed $params
      */
     public function testRenderRaisesExceptionForInvalidParameterTypes($params)
     {
         $renderer = new TwigRenderer();
-        $this->setExpectedException(Exception\InvalidArgumentException::class);
+        $this->expectException(Exception\InvalidArgumentException::class);
         $renderer->render('foo', $params);
     }
 
@@ -172,6 +174,9 @@ class TwigRendererTest extends TestCase
 
     /**
      * @dataProvider objectParameterValues
+     *
+     * @param object $params
+     * @param string $search
      */
     public function testCanRenderWithParameterObjects($params, $search)
     {

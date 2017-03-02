@@ -7,7 +7,8 @@
 
 namespace ZendTest\Expressive\Twig;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ProphecyInterface;
 use Twig_SimpleFunction as SimpleFunction;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -15,6 +16,12 @@ use Zend\Expressive\Twig\TwigExtension;
 
 class TwigExtensionTest extends TestCase
 {
+    /** @var ServerUrlHelper|ProphecyInterface */
+    private $serverUrlHelper;
+
+    /** @var UrlHelper|ProphecyInterface */
+    private $urlHelper;
+
     public function setUp()
     {
         $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
@@ -133,6 +140,8 @@ class TwigExtensionTest extends TestCase
 
     /**
      * @dataProvider emptyAssetVersions
+     *
+     * @param null|string $emptyValue
      */
     public function testRenderAssetUrlWithoutProvidedVersion($emptyValue)
     {
@@ -153,6 +162,8 @@ class TwigExtensionTest extends TestCase
 
     /**
      * @dataProvider zeroAssetVersions
+     *
+     * @param int|string $zeroValue
      */
     public function testRendersZeroVersionAssetUrl($zeroValue)
     {
