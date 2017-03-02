@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.3.0 - TBD
+
+### Added
+
+- [#28](https://github.com/zendframework/zend-expressive-twigrenderer/pull/28)
+  adds support for Twig 2.1. If you upgrade and receive this version, please be
+  aware that Twig 2.X no longer allows short name "aliases" for extensions. As
+  an example, the following works in Twig 1.X:
+
+  ```php
+  $environment->getExtension('core');
+  ```
+
+  but does not work in Twig 2.X, where you would instead need to use the fully
+  qualified class name:
+
+  ```php
+  $environment->getExtension(Twig_Extension_Core::class);
+  ```
+
+  As the latter notation has worked across both versions, you may want to
+  consider making that change before upgrading, if you were using the older
+  notation.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 1.2.2 - TBD
 
 ### Added
