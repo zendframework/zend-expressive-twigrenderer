@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.3.0 - TBD
+## 1.3.0 - 2017-03-02
 
 ### Added
 
@@ -25,24 +25,6 @@ All notable changes to this project will be documented in this file, in reverse 
   As the latter notation has worked across both versions, you may want to
   consider making that change before upgrading, if you were using the older
   notation.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.2.2 - TBD
-
-### Added
-
-- Nothing.
 
 ### Deprecated
 
