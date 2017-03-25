@@ -7,17 +7,17 @@
 
 namespace ZendTest\Expressive\Twig;
 
-use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
+use Psr\Container\ContainerInterface;
 use ReflectionProperty;
+use Twig_Environment as TwigEnvironment;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigEnvironmentFactory;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
-use Twig_Environment as TwigEnvironment;
 
 class TwigRendererFactoryTest extends TestCase
 {
