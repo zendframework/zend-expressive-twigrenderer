@@ -100,6 +100,8 @@ install:
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
   - if [[ $HELPER_DEPS != '' ]]; then travis_retry composer require $COMPOSER_ARGS --update-with-dependencies $HELPER_DEPS ; fi
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
+  - stty cols 120
+  - export COLUMNS=120
   - composer show
 
 script:
