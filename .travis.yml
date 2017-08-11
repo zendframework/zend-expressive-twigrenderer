@@ -5,8 +5,6 @@ language: php
 cache:
   directories:
     - $HOME/.composer/cache
-    - $HOME/.local
-    - vendor
 
 env:
   global:
@@ -69,25 +67,25 @@ matrix:
     - php: 7.1
       env:
         - DEPS=latest
-    - php: nightly
+    - php: 7.2
       env:
         - DEPS=lowest
-    - php: nightly
+    - php: 7.2
       env:
         - DEPS=locked
-    - php: nightly
+    - php: 7.2
       env:
         - DEPS=locked
         - HELPER_DEPS="zendframework/zend-expressive-helpers:^2.2 zendframework/zend-expressive-router:^1.3.2"
-    - php: nightly
+    - php: 7.2
       env:
         - DEPS=locked
         - HELPER_DEPS="zendframework/zend-expressive-helpers:^3.0.1"
-    - php: nightly
+    - php: 7.2
       env:
         - DEPS=latest
   allow_failures:
-    - php: nightly
+    - php: 7.2
 
 before_install:
   - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
@@ -100,9 +98,7 @@ install:
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
   - if [[ $HELPER_DEPS != '' ]]; then travis_retry composer require $COMPOSER_ARGS --update-with-dependencies $HELPER_DEPS ; fi
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
-  - stty cols 120
-  - export COLUMNS=120
-  - composer show
+  - stty cols 120 && composer show
 
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
