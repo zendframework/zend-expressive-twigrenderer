@@ -7,10 +7,10 @@
 
 namespace ZendTest\Expressive\Twig;
 
-use Interop\Container\ContainerInterface;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
+use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Core as TwigExtensionCore;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
