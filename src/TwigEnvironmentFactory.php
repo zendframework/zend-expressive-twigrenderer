@@ -9,7 +9,7 @@ namespace Zend\Expressive\Twig;
 
 use ArrayObject;
 use DateTimeZone;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Core as TwigExtensionCore;
 use Twig_Extension_Debug as TwigExtensionDebug;

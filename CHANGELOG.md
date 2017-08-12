@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.4.1 - TBD
+## 1.5.0 - TBD
 
 ### Added
 
-- Nothing.
+- [#30](https://github.com/zendframework/zend-expressive-twigrenderer/pull/30)
+  adds support for the PSR-11 Container Interface.
+
+### Changed
+
+- [#33](https://github.com/zendframework/zend-expressive-twigrenderer/pull/33)
+  removes duplicate code.
 
 ### Deprecated
 

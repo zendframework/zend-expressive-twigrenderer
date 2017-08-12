@@ -8,7 +8,7 @@
 namespace Zend\Expressive\Twig;
 
 use ArrayObject;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 
 /**

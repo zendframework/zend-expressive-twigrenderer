@@ -8,10 +8,10 @@
 namespace Zend\Expressive\Twig\Exception;
 
 use DomainException;
-use Interop\Container\Exception\ContainerException;
+use Psr\Container\ContainerExceptionInterface;
 
 class InvalidConfigException extends DomainException implements
-    ContainerException,
+    ContainerExceptionInterface,
     ExceptionInterface
 {
 }

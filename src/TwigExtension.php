@@ -140,7 +140,7 @@ class TwigExtension extends Twig_Extension implements \Twig_Extension_GlobalsInt
         array $options = []
     ) {
         return $this->serverUrlHelper->generate(
-            $this->urlHelper->generate($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
+            $this->renderUri($route, $routeParams, $queryParams, $fragmentIdentifier, $options)
         );
     }
 
