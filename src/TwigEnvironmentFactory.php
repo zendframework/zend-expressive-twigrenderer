@@ -1,9 +1,11 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
+
+declare(strict_types=1);
 
 namespace Zend\Expressive\Twig;
 
@@ -61,11 +63,9 @@ use Zend\Expressive\Helper\UrlHelper;
 class TwigEnvironmentFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return TwigEnvironment
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : TwigEnvironment
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
@@ -148,15 +148,14 @@ class TwigEnvironmentFactory
     /**
      * Inject extensions into the TwigEnvironment instance.
      *
-     * @param TwigEnvironment $environment
-     * @param ContainerInterface $container
-     * @param array $extensions
-     * @return void
      * @throws Exception\InvalidExtensionException if any extension provided or
      *     retrieved does not implement TwigExtensionInterface.
      */
-    private function injectExtensions(TwigEnvironment $environment, ContainerInterface $container, array $extensions)
-    {
+    private function injectExtensions(
+        TwigEnvironment $environment,
+        ContainerInterface $container,
+        array $extensions
+    ) : void {
         foreach ($extensions as $extension) {
             $extension = $this->loadExtension($extension, $container);
 
@@ -174,12 +173,10 @@ class TwigEnvironmentFactory
      * If the extension is not a TwigExtensionInterface, raises an exception.
      *
      * @param string|TwigExtensionInterface $extension
-     * @param ContainerInterface $container
-     * @return TwigExtensionInterface
      * @throws Exception\InvalidExtensionException if the extension provided or
      *     retrieved does not implement TwigExtensionInterface.
      */
-    private function loadExtension($extension, ContainerInterface $container)
+    private function loadExtension($extension, ContainerInterface $container) : TwigExtensionInterface
     {
         // Load the extension from the container if present
         if (is_string($extension) && $container->has($extension)) {
@@ -199,15 +196,14 @@ class TwigEnvironmentFactory
     /**
      * Inject Runtime Loaders into the TwigEnvironment instance.
      *
-     * @param TwigEnvironment $environment
-     * @param ContainerInterface $container
-     * @param array $runtimes
-     * @return void
      * @throws Exception\InvalidRuntimeLoaderException if a given runtime loader
      *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
      */
-    private function injectRuntimeLoaders(TwigEnvironment $environment, ContainerInterface $container, array $runtimes)
-    {
+    private function injectRuntimeLoaders(
+        TwigEnvironment $environment,
+        ContainerInterface $container,
+        array $runtimes
+    ) : void {
         foreach ($runtimes as $runtimeLoader) {
             $runtimeLoader = $this->loadRuntimeLoader($runtimeLoader, $container);
             $environment->addRuntimeLoader($runtimeLoader);
@@ -216,12 +212,10 @@ class TwigEnvironmentFactory
 
     /**
      * @param string|TwigRuntimeLoaderInterface $runtimeLoader
-     * @param ContainerInterface $container
-     * @return TwigRuntimeLoaderInterface
      * @throws Exception\InvalidRuntimeLoaderException if a given $runtimeLoader
      *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
      */
-    private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container)
+    private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container) : TwigRuntimeLoaderInterface
     {
         // Load the runtime loader from the container
         if (is_string($runtimeLoader) && $container->has($runtimeLoader)) {
@@ -247,11 +241,10 @@ class TwigEnvironmentFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     * @return array
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
-    private function mergeConfig($config)
+    private function mergeConfig($config) : array
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 

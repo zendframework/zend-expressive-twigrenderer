@@ -1,9 +1,11 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
+
+declare(strict_types=1);
 
 namespace Zend\Expressive\Twig;
 
@@ -38,11 +40,7 @@ class TwigRenderer implements TemplateRendererInterface
      */
     protected $template;
 
-    /**
-     * @param TwigEnvironment $template
-     * @param string          $suffix
-     */
-    public function __construct(TwigEnvironment $template = null, $suffix = 'html')
+    public function __construct(TwigEnvironment $template = null, string $suffix = 'html')
     {
         if (null === $template) {
             $template = $this->createTemplate($this->getDefaultLoader());
@@ -62,21 +60,16 @@ class TwigRenderer implements TemplateRendererInterface
 
     /**
      * Create a default Twig environment
-     *
-     * @param TwigFilesystem $loader
-     * @return TwigEnvironment
      */
-    private function createTemplate(TwigFilesystem $loader)
+    private function createTemplate(TwigFilesystem $loader) : TwigEnvironment
     {
         return new TwigEnvironment($loader);
     }
 
     /**
      * Get the default loader for template
-     *
-     * @return TwigFilesystem
      */
-    private function getDefaultLoader()
+    private function getDefaultLoader() : TwigFilesystem
     {
         return new TwigFilesystem();
     }
@@ -84,12 +77,10 @@ class TwigRenderer implements TemplateRendererInterface
     /**
      * Render
      *
-     * @param string $name
      * @param array|object $params
-     * @return string
      * @throws \Zend\Expressive\Template\Exception\InvalidArgumentException for non-array, non-object parameters.
      */
-    public function render($name, $params = [])
+    public function render(string $name, $params = []) : string
     {
         // Merge parameters based on requested template name
         $params = $this->mergeParams($name, $this->normalizeParams($params));
@@ -104,12 +95,8 @@ class TwigRenderer implements TemplateRendererInterface
 
     /**
      * Add a path for template
-     *
-     * @param string $path
-     * @param null|string $namespace
-     * @return void
      */
-    public function addPath($path, $namespace = null)
+    public function addPath(string $path, string $namespace = null) : void
     {
         $namespace = $namespace ?: TwigFilesystem::MAIN_NAMESPACE;
         $this->twigLoader->addPath($path, $namespace);
@@ -120,7 +107,7 @@ class TwigRenderer implements TemplateRendererInterface
      *
      * @return TemplatePath[]
      */
-    public function getPaths()
+    public function getPaths() : array
     {
         $paths = [];
         foreach ($this->twigLoader->getNamespaces() as $namespace) {
@@ -138,11 +125,8 @@ class TwigRenderer implements TemplateRendererInterface
      *
      * Normalizes templates in the format "namespace::template" to
      * "@namespace/template".
-     *
-     * @param string $template
-     * @return string
      */
-    public function normalizeTemplate($template)
+    public function normalizeTemplate(string $template) : string
     {
         $template = preg_replace('#^([^:]+)::(.*)$#', '@$1/$2', $template);
         if (! preg_match('#\.[a-z]+$#i', $template)) {
