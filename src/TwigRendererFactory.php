@@ -1,9 +1,11 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
+
+declare(strict_types=1);
 
 namespace Zend\Expressive\Twig;
 
@@ -17,11 +19,9 @@ use Twig_Environment as TwigEnvironment;
 class TwigRendererFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return TwigRenderer
      * @throws Exception\InvalidConfigException for invalid config service values.
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : TwigRenderer
     {
         $config      = $container->has('config') ? $container->get('config') : [];
         $config      = $this->mergeConfig($config);
@@ -38,11 +38,10 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     * @return array
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
-    private function mergeConfig($config)
+    private function mergeConfig($config) : array
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 
@@ -72,11 +71,8 @@ class TwigRendererFactory
      * notice indicating the developer should update their configuration.
      *
      * If the service is registered, it is simply pulled and returned.
-     *
-     * @param ContainerInterface $container
-     * @return TwigEnvironment
      */
-    private function getEnvironment(ContainerInterface $container)
+    private function getEnvironment(ContainerInterface $container) : TwigEnvironment
     {
         if ($container->has(TwigEnvironment::class)) {
             return $container->get(TwigEnvironment::class);
