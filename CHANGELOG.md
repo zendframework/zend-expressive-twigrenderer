@@ -18,6 +18,10 @@ All notable changes to this project will be documented in this file, in reverse 
   classes from this component, you may need to check any signatures you
   override.
 
+- [#37](https://github.com/zendframework/zend-expressive-twigrenderer/pull/37)
+  updates the package `ExceptionInterface` to extend from the
+  `ExceptionInterface` provided in zend-expressive-template.
+
 ### Deprecated
 
 - Nothing.
