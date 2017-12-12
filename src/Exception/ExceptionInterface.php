@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Zend\Expressive\Twig\Exception;
 
-interface ExceptionInterface
+use Zend\Expressive\Template\Exception\ExceptionInterface as TemplateExceptionInterface;
+
+interface ExceptionInterface extends TemplateExceptionInterface
 {
 }
