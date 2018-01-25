@@ -18,7 +18,7 @@ class ExceptionTest extends TestCase
 {
     public function testExceptionInterfaceExtendsTemplateExceptionInterface() : void
     {
-        self::assertTrue(is_a(ExceptionInterface::class, TemplateExceptionInterface::class, true));
+        $this->assertTrue(is_a(ExceptionInterface::class, TemplateExceptionInterface::class, true));
     }
 
     public function exception() : Generator
@@ -38,7 +38,7 @@ class ExceptionTest extends TestCase
      */
     public function testExceptionIsInstanceOfExceptionInterface(string $exception) : void
     {
-        self::assertContains('Exception', $exception);
-        self::assertTrue(is_a($exception, ExceptionInterface::class, true));
+        $this->assertContains('Exception', $exception);
+        $this->assertTrue(is_a($exception, ExceptionInterface::class, true));
     }
 }
