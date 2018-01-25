@@ -10,6 +10,14 @@ All notable changes to this project will be documented in this file, in reverse 
   adds support for zend-expressive-template v2, zend-expressive-router v3, and
   zend-expressive-helpers v5.
 
+- [#38](https://github.com/zendframework/zend-expressive-twigrenderer/pull/38)
+  adds a `ConfigProvider` class with default service wiring and configuration
+  for the component. It also updates `composer.json` to add
+  `extra.zf.config-provider` configuration to notify zend-component-installer
+  of the shipped `ConfigProvider` class, allowing the plugin to inject the
+  `ConfigProvider` in your application configuration during initial
+  installation.
+
 ### Changed
 
 - [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
