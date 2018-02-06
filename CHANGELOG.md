@@ -2,12 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.0.0alpha1 - TBD
+## 2.0.0alpha1 - 2018-02-06
 
 ### Added
 
-- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
-  adds support for zend-expressive-template v2, zend-expressive-router v3, and
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36) and
+  [#42](https://github.com/zendframework/zend-expressive-twigrenderer/pull/42)
+  add support for zend-expressive-template v2, zend-expressive-router v3, and
   zend-expressive-helpers v5.
 
 - [#38](https://github.com/zendframework/zend-expressive-twigrenderer/pull/38)
