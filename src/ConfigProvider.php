@@ -1,7 +1,7 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
@@ -18,19 +18,20 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'templates' => $this->getTemplates(),
+            'templates'    => $this->getTemplates(),
         ];
     }
 
     public function getDependencies() : array
     {
         return [
-            'aliases' => [
+            'aliases'   => [
                 TemplateRendererInterface::class => TwigRenderer::class,
             ],
             'factories' => [
                 Twig_Environment::class => TwigEnvironmentFactory::class,
-                TwigRenderer::class => TwigRendererFactory::class,
+                TwigExtension::class    => TwigExtensionFactory::class,
+                TwigRenderer::class     => TwigRendererFactory::class,
             ],
         ];
     }
@@ -39,7 +40,7 @@ class ConfigProvider
     {
         return [
             'extension' => 'html.twig',
-            'paths' => [],
+            'paths'     => [],
         ];
     }
 }

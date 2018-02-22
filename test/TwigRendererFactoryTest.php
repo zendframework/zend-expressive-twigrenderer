@@ -1,7 +1,7 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (https://www.zend.com)
+ * @copyright Copyright (c) 2015-2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
@@ -18,6 +18,7 @@ use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigEnvironmentFactory;
+use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
 
@@ -122,6 +123,7 @@ class TwigRendererFactoryTest extends TestCase
     public function testCallingFactoryWithNoConfigReturnsTwigInstance()
     {
         $this->container->has('config')->willReturn(false);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -158,6 +160,7 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -180,6 +183,7 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -210,6 +214,7 @@ class TwigRendererFactoryTest extends TestCase
     public function testCallingFactoryWithoutTwigEnvironmentServiceEmitsDeprecationNotice()
     {
         $this->container->has('config')->willReturn(false);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $this->container->has(TwigEnvironment::class)->willReturn(false);

@@ -103,15 +103,12 @@ class TwigEnvironmentFactory
             $environment->getExtension(TwigExtensionCore::class)->setTimezone($timezone);
         }
 
-        // Add expressive twig extension
-        if ($container->has(ServerUrlHelper::class) && $container->has(UrlHelper::class)) {
-            $environment->addExtension(new TwigExtension(
-                $container->get(ServerUrlHelper::class),
-                $container->get(UrlHelper::class),
-                isset($config['assets_url']) ? $config['assets_url'] : '',
-                isset($config['assets_version']) ? $config['assets_version'] : '',
-                isset($config['globals']) ? $config['globals'] : []
-            ));
+        // Add expressive twig extension if requirements are met
+        if ($container->has(TwigExtension::class)
+            && $container->has(ServerUrlHelper::class)
+            && $container->has(UrlHelper::class)
+        ) {
+            $environment->addExtension($container->get(TwigExtension::class));
         }
 
         // Add debug extension
