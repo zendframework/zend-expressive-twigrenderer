@@ -47,7 +47,7 @@ class TwigRendererFactory
 
         if (! is_array($config)) {
             throw new Exception\InvalidConfigException(sprintf(
-                'config service MUST be an array or ArrayObject; received %s',
+                'Config service MUST be an array or ArrayObject; received %s',
                 is_object($config) ? get_class($config) : gettype($config)
             ));
         }

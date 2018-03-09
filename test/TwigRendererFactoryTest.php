@@ -17,6 +17,7 @@ use Twig_Environment as TwigEnvironment;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
+use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\TwigEnvironmentFactory;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
@@ -228,5 +229,22 @@ class TwigRendererFactoryTest extends TestCase
 
         $twig = $factory($this->container->reveal());
         $this->assertInstanceOf(TwigRenderer::class, $twig);
+    }
+
+    public function testRaisesExceptionForInvalidConfig()
+    {
+        $config = 'foo';
+
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $this->container->has(TwigEnvironment::class)->willReturn(false);
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
+
+        (new TwigRendererFactory())($this->container->reveal());
     }
 }

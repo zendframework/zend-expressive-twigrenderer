@@ -14,6 +14,7 @@ use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigExtensionFactory;
 
@@ -24,9 +25,49 @@ class TwigExtensionFactoryTest extends TestCase
      */
     private $container;
 
+    /**
+     * @var ServerUrlHelper|ProphecyInterface
+     */
+    private $serverUrlHelper;
+
+    /**
+     * @var UrlHelper|ProphecyInterface
+     */
+    private $urlHelper;
+
     public function setUp()
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container       = $this->prophesize(ContainerInterface::class);
+        $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
+        $this->urlHelper       = $this->prophesize(UrlHelper::class);
+    }
+
+    public function testRaisesExceptionForMissingServerUrlHelper()
+    {
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Missing required `%s` dependency.',
+            ServerUrlHelper::class
+        ));
+
+        (new TwigExtensionFactory())($this->container->reveal());
+    }
+
+    public function testRaisesExceptionForMissingUrlHelper()
+    {
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
+        $this->container->has(UrlHelper::class)->willReturn(false);
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Missing required `%s` dependency.',
+            UrlHelper::class
+        ));
+
+        (new TwigExtensionFactory())($this->container->reveal());
     }
 
     public function testUsesAssetsConfigurationWhenAddingTwigExtension()
@@ -38,22 +79,20 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
-        $urlHelper       = $this->prophesize(UrlHelper::class)->reveal();
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(true);
-        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
         $this->container->has(UrlHelper::class)->willReturn(true);
-        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
+        $this->container->get(UrlHelper::class)->willReturn($this->urlHelper->reveal());
         $factory   = new TwigExtensionFactory();
         $extension = $factory($this->container->reveal());
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['templates']['assets_url'], 'assetsUrl', $extension);
         $this->assertAttributeEquals($config['templates']['assets_version'], 'assetsVersion', $extension);
-        $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
-        $this->assertAttributeSame($urlHelper, 'urlHelper', $extension);
+        $this->assertAttributeSame($this->serverUrlHelper->reveal(), 'serverUrlHelper', $extension);
+        $this->assertAttributeSame($this->urlHelper->reveal(), 'urlHelper', $extension);
     }
 
     public function testConfiguresGlobals()
@@ -67,20 +106,35 @@ class TwigExtensionFactoryTest extends TestCase
             ],
         ];
 
-        $serverUrlHelper = $this->prophesize(ServerUrlHelper::class)->reveal();
-        $urlHelper       = $this->prophesize(UrlHelper::class)->reveal();
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
         $this->container->has(ServerUrlHelper::class)->willReturn(true);
-        $this->container->get(ServerUrlHelper::class)->willReturn($serverUrlHelper);
+        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
         $this->container->has(UrlHelper::class)->willReturn(true);
-        $this->container->get(UrlHelper::class)->willReturn($urlHelper);
+        $this->container->get(UrlHelper::class)->willReturn($this->urlHelper->reveal());
         $factory   = new TwigExtensionFactory();
         $extension = $factory($this->container->reveal());
 
         $this->assertInstanceOf(TwigExtension::class, $extension);
         $this->assertAttributeEquals($config['twig']['globals'], 'globals', $extension);
-        $this->assertAttributeSame($serverUrlHelper, 'serverUrlHelper', $extension);
-        $this->assertAttributeSame($urlHelper, 'urlHelper', $extension);
+        $this->assertAttributeSame($this->serverUrlHelper->reveal(), 'serverUrlHelper', $extension);
+        $this->assertAttributeSame($this->urlHelper->reveal(), 'urlHelper', $extension);
+    }
+
+    public function testRaisesExceptionForInvalidConfig()
+    {
+        $config = 'foo';
+
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(ServerUrlHelper::class)->willReturn(true);
+        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
+        $this->container->has(UrlHelper::class)->willReturn(true);
+        $this->container->get(UrlHelper::class)->willReturn($this->urlHelper->reveal());
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
+
+        (new TwigExtensionFactory())($this->container->reveal());
     }
 }

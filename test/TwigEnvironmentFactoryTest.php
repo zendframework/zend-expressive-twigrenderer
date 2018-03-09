@@ -227,6 +227,26 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory($this->container->reveal());
     }
 
+    public function testRaisesExceptionForNonStringTimezone()
+    {
+        $config = [
+            'twig' => [
+                'timezone' => new DateTimeZone('UTC'),
+            ],
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+        $this->container->has(ServerUrlHelper::class)->willReturn(false);
+        $this->container->has(UrlHelper::class)->willReturn(false);
+        $factory = new TwigEnvironmentFactory();
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('"timezone" configuration value must be a string');
+
+        $factory($this->container->reveal());
+    }
+
     public function invalidRuntimeLoaders()
     {
         return [
