@@ -98,6 +98,13 @@ are registered with the container.
 
 ## Configuration
 
+If you use the [zend-component-installer](https://github.com/zendframework/zend-component-installer) 
+the factories are configured automatically for you when requiring this package
+wit composer. Without the component installer, you need to 
+include the `[ConfigProvider](src/ConfigProvider.php)` in your 
+`[config/config.php](https://github.com/zendframework/zend-expressive-skeleton/blob/master/config/config.php)`. 
+Optional configuration can be stored in `config/autoload/templates.global.php`.
+
 ```php
 'templates' => [
     'extension' => 'file extension used by templates; defaults to html.twig',
