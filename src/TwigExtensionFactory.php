@@ -67,10 +67,10 @@ class TwigExtensionFactory
             ));
         }
 
-        $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
+        $expressiveConfig = isset($config['templates']) && is_array($config['templates'])
             ? $config['templates']
             : [];
-        $twigConfig       = (isset($config['twig']) && is_array($config['twig']))
+        $twigConfig       = isset($config['twig']) && is_array($config['twig'])
             ? $config['twig']
             : [];
 
