@@ -77,9 +77,9 @@ class TwigEnvironmentFactory
             ));
         }
 
-        $debug    = array_key_exists('debug', $config) ? (bool) $config['debug'] : false;
+        $debug    = (bool) ($config['debug'] ?? false);
         $config   = TwigRendererFactory::mergeConfig($config);
-        $cacheDir = isset($config['cache_dir']) ? $config['cache_dir'] : false;
+        $cacheDir = $config['cache_dir'] ?? false;
 
         // Create the engine instance
         $loader      = new TwigLoader();
@@ -117,13 +117,13 @@ class TwigEnvironmentFactory
         }
 
         // Add user defined extensions
-        $extensions = (isset($config['extensions']) && is_array($config['extensions']))
+        $extensions = isset($config['extensions']) && is_array($config['extensions'])
             ? $config['extensions']
             : [];
         $this->injectExtensions($environment, $container, $extensions);
 
         // Add user defined runtime loaders
-        $runtimeLoaders = (isset($config['runtime_loaders']) && is_array($config['runtime_loaders']))
+        $runtimeLoaders = isset($config['runtime_loaders']) && is_array($config['runtime_loaders'])
             ? $config['runtime_loaders']
             : [];
         $this->injectRuntimeLoaders($environment, $container, $runtimeLoaders);

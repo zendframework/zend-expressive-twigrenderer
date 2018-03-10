@@ -27,7 +27,7 @@ class TwigRendererFactory
         $config      = self::mergeConfig($config);
         $environment = $this->getEnvironment($container);
 
-        return new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
+        return new TwigRenderer($environment, $config['extension'] ?? 'html.twig');
     }
 
     /**
