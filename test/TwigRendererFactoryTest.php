@@ -241,6 +241,7 @@ class TwigRendererFactoryTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
 
-        (new TwigRendererFactory())($this->container->reveal());
+        $factory = new TwigRendererFactory();
+        $factory($this->container->reveal());
     }
 }

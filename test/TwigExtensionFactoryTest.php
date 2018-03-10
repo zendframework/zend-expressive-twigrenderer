@@ -52,13 +52,13 @@ class TwigExtensionFactoryTest extends TestCase
             ServerUrlHelper::class
         ));
 
-        (new TwigExtensionFactory())($this->container->reveal());
+        $factory = new TwigExtensionFactory();
+        $factory($this->container->reveal());
     }
 
     public function testRaisesExceptionForMissingUrlHelper()
     {
         $this->container->has(ServerUrlHelper::class)->willReturn(true);
-        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
         $this->container->has(UrlHelper::class)->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
@@ -67,7 +67,8 @@ class TwigExtensionFactoryTest extends TestCase
             UrlHelper::class
         ));
 
-        (new TwigExtensionFactory())($this->container->reveal());
+        $factory = new TwigExtensionFactory();
+        $factory($this->container->reveal());
     }
 
     public function testUsesAssetsConfigurationWhenAddingTwigExtension()
@@ -135,6 +136,7 @@ class TwigExtensionFactoryTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
 
-        (new TwigExtensionFactory())($this->container->reveal());
+        $factory = new TwigExtensionFactory();
+        $factory($this->container->reveal());
     }
 }
