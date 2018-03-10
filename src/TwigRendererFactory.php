@@ -24,7 +24,7 @@ class TwigRendererFactory
     public function __invoke(ContainerInterface $container) : TwigRenderer
     {
         $config      = $container->has('config') ? $container->get('config') : [];
-        $config      = $this->mergeConfig($config);
+        $config      = self::mergeConfig($config);
         $environment = $this->getEnvironment($container);
 
         return new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
@@ -41,7 +41,7 @@ class TwigRendererFactory
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
-    private function mergeConfig($config) : array
+    public static function mergeConfig($config) : array
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 

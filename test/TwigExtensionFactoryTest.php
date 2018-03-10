@@ -121,22 +121,4 @@ class TwigExtensionFactoryTest extends TestCase
         $this->assertAttributeSame($this->serverUrlHelper->reveal(), 'serverUrlHelper', $extension);
         $this->assertAttributeSame($this->urlHelper->reveal(), 'urlHelper', $extension);
     }
-
-    public function testRaisesExceptionForInvalidConfig()
-    {
-        $config = 'foo';
-
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-        $this->container->has(ServerUrlHelper::class)->willReturn(true);
-        $this->container->get(ServerUrlHelper::class)->willReturn($this->serverUrlHelper->reveal());
-        $this->container->has(UrlHelper::class)->willReturn(true);
-        $this->container->get(UrlHelper::class)->willReturn($this->urlHelper->reveal());
-
-        $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
-
-        $factory = new TwigExtensionFactory();
-        $factory($this->container->reveal());
-    }
 }

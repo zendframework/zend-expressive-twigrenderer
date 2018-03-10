@@ -231,17 +231,40 @@ class TwigRendererFactoryTest extends TestCase
         $this->assertInstanceOf(TwigRenderer::class, $twig);
     }
 
-    public function testRaisesExceptionForInvalidConfig()
+    public function testMergeConfigRaisesExceptionForInvalidConfig()
     {
-        $config = 'foo';
-
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
 
-        $factory = new TwigRendererFactory();
-        $factory($this->container->reveal());
+        TwigRendererFactory::mergeConfig('foo');
+    }
+
+    public function testMergesConfigCorrectly()
+    {
+        $config = [
+            'templates' => [
+                'extension' => 'file extension used by templates; defaults to html.twig',
+                'paths' => [],
+            ],
+            'twig' => [
+                'cache_dir' => 'path to cached templates',
+                'assets_url' => 'base URL for assets',
+                'assets_version' => 'base version for assets',
+                'extensions' => [],
+                'runtime_loaders' => [],
+                'globals' => ['ga_tracking' => 'UA-XXXXX-X'],
+                'timezone' => 'default timezone identifier, e.g.: America/New_York',
+            ],
+        ];
+
+        $mergedConfig = TwigRendererFactory::mergeConfig($config);
+
+        $this->assertArrayHasKey('extension', $mergedConfig);
+        $this->assertArrayHasKey('paths', $mergedConfig);
+        $this->assertArrayHasKey('cache_dir', $mergedConfig);
+        $this->assertArrayHasKey('assets_version', $mergedConfig);
+        $this->assertArrayHasKey('runtime_loaders', $mergedConfig);
+        $this->assertArrayHasKey('globals', $mergedConfig);
+        $this->assertArrayHasKey('timezone', $mergedConfig);
     }
 }

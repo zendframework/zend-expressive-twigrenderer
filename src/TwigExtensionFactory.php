@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Zend\Expressive\Twig;
 
-use ArrayObject;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -34,7 +33,7 @@ class TwigExtensionFactory
         }
 
         $config = $container->has('config') ? $container->get('config') : [];
-        $config = $this->mergeConfig($config);
+        $config = TwigRendererFactory::mergeConfig($config);
 
         return new TwigExtension(
             $container->get(ServerUrlHelper::class),
@@ -43,37 +42,5 @@ class TwigExtensionFactory
             $config['assets_version'] ?? '',
             $config['globals'] ?? []
         );
-    }
-
-    /**
-     * Merge expressive templating config with twig config.
-     *
-     * Pulls the `templates` and `twig` top-level keys from the configuration,
-     * if present, and then returns the merged result, with those from the twig
-     * array having precedence.
-     *
-     * @param array|ArrayObject $config
-     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
-     *     $config is received.
-     */
-    private function mergeConfig($config) : array
-    {
-        $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
-
-        if (! is_array($config)) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'Config service MUST be an array or ArrayObject; received %s',
-                is_object($config) ? get_class($config) : gettype($config)
-            ));
-        }
-
-        $expressiveConfig = isset($config['templates']) && is_array($config['templates'])
-            ? $config['templates']
-            : [];
-        $twigConfig       = isset($config['twig']) && is_array($config['twig'])
-            ? $config['twig']
-            : [];
-
-        return array_replace_recursive($expressiveConfig, $twigConfig);
     }
 }
