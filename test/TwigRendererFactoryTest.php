@@ -237,10 +237,6 @@ class TwigRendererFactoryTest extends TestCase
 
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
-        $this->container->has(TwigExtension::class)->willReturn(false);
-        $this->container->has(ServerUrlHelper::class)->willReturn(false);
-        $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(TwigEnvironment::class)->willReturn(false);
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
