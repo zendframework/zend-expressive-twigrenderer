@@ -30,7 +30,7 @@
     },
     "require-dev": {
         "malukenho/docheader": "^0.1.5",
-        "phpunit/phpunit": "^6.5.3",
+        "phpunit/phpunit": "^7.0.2",
         "zendframework/zend-coding-standard": "~1.0.0"
     },
     "conflict": {
