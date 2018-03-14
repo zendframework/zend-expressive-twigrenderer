@@ -1,7 +1,7 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (https://www.zend.com)
+ * @copyright Copyright (c) 2015-2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
@@ -24,10 +24,10 @@ class TwigRendererFactory
     public function __invoke(ContainerInterface $container) : TwigRenderer
     {
         $config      = $container->has('config') ? $container->get('config') : [];
-        $config      = $this->mergeConfig($config);
+        $config      = self::mergeConfig($config);
         $environment = $this->getEnvironment($container);
 
-        return new TwigRenderer($environment, isset($config['extension']) ? $config['extension'] : 'html.twig');
+        return new TwigRenderer($environment, $config['extension'] ?? 'html.twig');
     }
 
     /**
@@ -41,13 +41,13 @@ class TwigRendererFactory
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
-    private function mergeConfig($config) : array
+    public static function mergeConfig($config) : array
     {
         $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
 
         if (! is_array($config)) {
             throw new Exception\InvalidConfigException(sprintf(
-                'config service MUST be an array or ArrayObject; received %s',
+                'Config service MUST be an array or ArrayObject; received %s',
                 is_object($config) ? get_class($config) : gettype($config)
             ));
         }

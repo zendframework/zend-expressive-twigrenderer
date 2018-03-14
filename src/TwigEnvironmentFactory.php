@@ -1,7 +1,7 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
 
@@ -77,9 +77,9 @@ class TwigEnvironmentFactory
             ));
         }
 
-        $debug    = array_key_exists('debug', $config) ? (bool) $config['debug'] : false;
-        $config   = $this->mergeConfig($config);
-        $cacheDir = isset($config['cache_dir']) ? $config['cache_dir'] : false;
+        $debug    = (bool) ($config['debug'] ?? false);
+        $config   = TwigRendererFactory::mergeConfig($config);
+        $cacheDir = $config['cache_dir'] ?? false;
 
         // Create the engine instance
         $loader      = new TwigLoader();
@@ -103,15 +103,12 @@ class TwigEnvironmentFactory
             $environment->getExtension(TwigExtensionCore::class)->setTimezone($timezone);
         }
 
-        // Add expressive twig extension
-        if ($container->has(ServerUrlHelper::class) && $container->has(UrlHelper::class)) {
-            $environment->addExtension(new TwigExtension(
-                $container->get(ServerUrlHelper::class),
-                $container->get(UrlHelper::class),
-                isset($config['assets_url']) ? $config['assets_url'] : '',
-                isset($config['assets_version']) ? $config['assets_version'] : '',
-                isset($config['globals']) ? $config['globals'] : []
-            ));
+        // Add expressive twig extension if requirements are met
+        if ($container->has(TwigExtension::class)
+            && $container->has(ServerUrlHelper::class)
+            && $container->has(UrlHelper::class)
+        ) {
+            $environment->addExtension($container->get(TwigExtension::class));
         }
 
         // Add debug extension
@@ -120,13 +117,13 @@ class TwigEnvironmentFactory
         }
 
         // Add user defined extensions
-        $extensions = (isset($config['extensions']) && is_array($config['extensions']))
+        $extensions = isset($config['extensions']) && is_array($config['extensions'])
             ? $config['extensions']
             : [];
         $this->injectExtensions($environment, $container, $extensions);
 
         // Add user defined runtime loaders
-        $runtimeLoaders = (isset($config['runtime_loaders']) && is_array($config['runtime_loaders']))
+        $runtimeLoaders = isset($config['runtime_loaders']) && is_array($config['runtime_loaders'])
             ? $config['runtime_loaders']
             : [];
         $this->injectRuntimeLoaders($environment, $container, $runtimeLoaders);
@@ -231,37 +228,5 @@ class TwigEnvironmentFactory
         }
 
         return $runtimeLoader;
-    }
-
-    /**
-     * Merge expressive templating config with twig config.
-     *
-     * Pulls the `templates` and `twig` top-level keys from the configuration,
-     * if present, and then returns the merged result, with those from the twig
-     * array having precedence.
-     *
-     * @param array|ArrayObject $config
-     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
-     *     $config is received.
-     */
-    private function mergeConfig($config) : array
-    {
-        $config = $config instanceof ArrayObject ? $config->getArrayCopy() : $config;
-
-        if (! is_array($config)) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'config service MUST be an array or ArrayObject; received %s',
-                is_object($config) ? get_class($config) : gettype($config)
-            ));
-        }
-
-        $expressiveConfig = (isset($config['templates']) && is_array($config['templates']))
-            ? $config['templates']
-            : [];
-        $twigConfig = (isset($config['twig']) && is_array($config['twig']))
-            ? $config['twig']
-            : [];
-
-        return array_replace_recursive($expressiveConfig, $twigConfig);
     }
 }

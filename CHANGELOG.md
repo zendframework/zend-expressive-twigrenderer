@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.0.0alpha2 - TBD
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- [#43](https://github.com/zendframework/zend-expressive-twigrenderer/pull/43)
+  adds a TwigExtensionFactory so the TwigExtension can be customized. 
+  
+  If you have the ConfigProvider in your `config\config.php` file, this factory 
+  is added for you. If you don't use the ConfigProvider, you need to add this 
+  to your config:
+  
+  ```php
+  'dependencies' => [  
+      'factories' => [
+          TwigExtension::class => TwigExtensionFactory::class,
+      ],
+  ],
+  ```
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 2.0.0alpha1 - 2018-02-06
 
 ### Added
