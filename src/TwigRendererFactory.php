@@ -13,6 +13,16 @@ use ArrayObject;
 use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 
+use function array_replace_recursive;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
+
 /**
  * Create and return a Twig template instance.
  */
@@ -78,13 +88,13 @@ class TwigRendererFactory
             return $container->get(TwigEnvironment::class);
         }
 
-        \trigger_error(sprintf(
+        trigger_error(sprintf(
             '%s now expects you to register the factory %s for the service %s; '
             . 'please update your dependency configuration.',
             __CLASS__,
             TwigEnvironmentFactory::class,
             TwigEnvironment::class
-        ), \E_USER_DEPRECATED);
+        ), E_USER_DEPRECATED);
 
         $factory = new TwigEnvironmentFactory();
         return $factory($container);

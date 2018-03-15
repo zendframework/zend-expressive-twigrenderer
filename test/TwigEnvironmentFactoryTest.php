@@ -25,6 +25,8 @@ use Zend\Expressive\Twig\TwigEnvironmentFactory;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigExtensionFactory;
 
+use function is_string;
+
 class TwigEnvironmentFactoryTest extends TestCase
 {
     /**

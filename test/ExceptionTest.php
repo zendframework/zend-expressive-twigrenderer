@@ -14,6 +14,12 @@ use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Template\Exception\ExceptionInterface as TemplateExceptionInterface;
 use Zend\Expressive\Twig\Exception\ExceptionInterface;
 
+use function basename;
+use function glob;
+use function is_a;
+use function strrpos;
+use function substr;
+
 class ExceptionTest extends TestCase
 {
     public function testExceptionInterfaceExtendsTemplateExceptionInterface() : void

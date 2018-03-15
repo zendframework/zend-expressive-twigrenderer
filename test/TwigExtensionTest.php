@@ -16,6 +16,8 @@ use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\TwigExtension;
 
+use function sprintf;
+
 class TwigExtensionTest extends TestCase
 {
     /** @var ServerUrlHelper|ProphecyInterface */

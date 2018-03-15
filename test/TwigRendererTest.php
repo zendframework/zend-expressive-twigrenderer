@@ -17,6 +17,12 @@ use Zend\Expressive\Template\Exception;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigRenderer;
 
+use function file_get_contents;
+use function sprintf;
+use function str_replace;
+use function uniqid;
+use function var_export;
+
 class TwigRendererTest extends TestCase
 {
     /**

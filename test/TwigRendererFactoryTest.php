@@ -23,6 +23,12 @@ use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
 
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+
+use const E_USER_DEPRECATED;
+
 class TwigRendererFactoryTest extends TestCase
 {
     /**
@@ -225,7 +231,7 @@ class TwigRendererFactoryTest extends TestCase
         $this->errorHandler = set_error_handler(function ($errno, $errstr) {
             $this->assertContains(TwigEnvironment::class, $errstr);
             return true;
-        }, \E_USER_DEPRECATED);
+        }, E_USER_DEPRECATED);
 
         $twig = $factory($this->container->reveal());
         $this->assertInstanceOf(TwigRenderer::class, $twig);

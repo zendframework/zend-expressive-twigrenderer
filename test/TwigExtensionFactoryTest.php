@@ -18,6 +18,8 @@ use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigExtensionFactory;
 
+use function sprintf;
+
 class TwigExtensionFactoryTest extends TestCase
 {
     /**
