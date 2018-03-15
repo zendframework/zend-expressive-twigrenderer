@@ -2,42 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.0.0rc1 - 2018-03-14
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- [#43](https://github.com/zendframework/zend-expressive-twigrenderer/pull/43)
-  adds a TwigExtensionFactory so the TwigExtension can be customized.
-
-  If you have the ConfigProvider in your `config\config.php` file, this factory
-  is added for you. If you don't use the ConfigProvider, you need to add this
-  to your config:
-
-  ```php
-  'dependencies' => [
-      'factories' => [
-          TwigExtension::class => TwigExtensionFactory::class,
-      ],
-  ],
-  ```
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 2.0.0alpha1 - 2018-02-06
+## 2.0.0 - 2018-03-15
 
 ### Added
 
@@ -55,6 +20,21 @@ All notable changes to this project will be documented in this file, in reverse 
   installation.
 
 ### Changed
+
+- [#43](https://github.com/zendframework/zend-expressive-twigrenderer/pull/43)
+  adds a TwigExtensionFactory so the TwigExtension can be customized.
+
+  If you have the ConfigProvider in your `config\config.php` file, this factory
+  is added for you. If you don't use the ConfigProvider, you need to add this
+  to your config:
+
+  ```php
+  'dependencies' => [
+      'factories' => [
+          TwigExtension::class => TwigExtensionFactory::class,
+      ],
+  ],
+  ```
 
 - [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
   updates all code to add scalar and return type hints, including nullable types
@@ -83,50 +63,6 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
   removes support for zend-expressive-helpers releases prior to v5.
-
-### Fixed
-
-- Nothing.
-
-## 1.6.0 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.5.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
 
 ### Fixed
 
