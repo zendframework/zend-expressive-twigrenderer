@@ -2,15 +2,49 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.1 - TBD
+## 2.0.0 - 2018-03-15
 
 ### Added
 
-- Nothing.
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36) and
+  [#42](https://github.com/zendframework/zend-expressive-twigrenderer/pull/42)
+  add support for zend-expressive-template v2, zend-expressive-router v3, and
+  zend-expressive-helpers v5.
+
+- [#38](https://github.com/zendframework/zend-expressive-twigrenderer/pull/38)
+  adds a `ConfigProvider` class with default service wiring and configuration
+  for the component. It also updates `composer.json` to add
+  `extra.zf.config-provider` configuration to notify zend-component-installer
+  of the shipped `ConfigProvider` class, allowing the plugin to inject the
+  `ConfigProvider` in your application configuration during initial
+  installation.
 
 ### Changed
 
-- Nothing.
+- [#43](https://github.com/zendframework/zend-expressive-twigrenderer/pull/43)
+  adds a TwigExtensionFactory so the TwigExtension can be customized.
+
+  If you have the ConfigProvider in your `config\config.php` file, this factory
+  is added for you. If you don't use the ConfigProvider, you need to add this
+  to your config:
+
+  ```php
+  'dependencies' => [
+      'factories' => [
+          TwigExtension::class => TwigExtensionFactory::class,
+      ],
+  ],
+  ```
+
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
+  updates all code to add scalar and return type hints, including nullable types
+  and void types, wherever they make sense. As such, if you are extending any
+  classes from this component, you may need to check any signatures you
+  override.
+
+- [#37](https://github.com/zendframework/zend-expressive-twigrenderer/pull/37)
+  updates the package `ExceptionInterface` to extend from the
+  `ExceptionInterface` provided in zend-expressive-template.
 
 ### Deprecated
 
@@ -18,7 +52,17 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
+  removes support for PHP versions prior to PHP 7.1.
+
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
+  removes support for zend-expressive-template releases prior to v2.
+
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
+  removes support for zend-expressive-router releases prior to v3.
+
+- [#36](https://github.com/zendframework/zend-expressive-twigrenderer/pull/36)
+  removes support for zend-expressive-helpers releases prior to v5.
 
 ### Fixed
 
