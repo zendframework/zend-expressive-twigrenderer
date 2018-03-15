@@ -1,9 +1,11 @@
 <?php
 /**
  * @see       https://github.com/zendframework/zend-expressive-twigrenderer for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/zendframework/zend-expressive-twigrenderer/blob/master/LICENSE.md New BSD License
  */
+
+declare(strict_types=1);
 
 namespace ZendTest\Expressive\Twig;
 
@@ -15,9 +17,17 @@ use Twig_Environment as TwigEnvironment;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
+use Zend\Expressive\Twig\Exception\InvalidConfigException;
 use Zend\Expressive\Twig\TwigEnvironmentFactory;
+use Zend\Expressive\Twig\TwigExtension;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\Twig\TwigRendererFactory;
+
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+
+use const E_USER_DEPRECATED;
 
 class TwigRendererFactoryTest extends TestCase
 {
@@ -120,6 +130,7 @@ class TwigRendererFactoryTest extends TestCase
     public function testCallingFactoryWithNoConfigReturnsTwigInstance()
     {
         $this->container->has('config')->willReturn(false);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -156,6 +167,7 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -178,6 +190,7 @@ class TwigRendererFactoryTest extends TestCase
         ];
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
@@ -208,6 +221,7 @@ class TwigRendererFactoryTest extends TestCase
     public function testCallingFactoryWithoutTwigEnvironmentServiceEmitsDeprecationNotice()
     {
         $this->container->has('config')->willReturn(false);
+        $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $this->container->has(TwigEnvironment::class)->willReturn(false);
@@ -217,9 +231,46 @@ class TwigRendererFactoryTest extends TestCase
         $this->errorHandler = set_error_handler(function ($errno, $errstr) {
             $this->assertContains(TwigEnvironment::class, $errstr);
             return true;
-        }, \E_USER_DEPRECATED);
+        }, E_USER_DEPRECATED);
 
         $twig = $factory($this->container->reveal());
         $this->assertInstanceOf(TwigRenderer::class, $twig);
+    }
+
+    public function testMergeConfigRaisesExceptionForInvalidConfig()
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('Config service MUST be an array or ArrayObject; received string');
+
+        TwigRendererFactory::mergeConfig('foo');
+    }
+
+    public function testMergesConfigCorrectly()
+    {
+        $config = [
+            'templates' => [
+                'extension' => 'file extension used by templates; defaults to html.twig',
+                'paths' => [],
+            ],
+            'twig' => [
+                'cache_dir' => 'path to cached templates',
+                'assets_url' => 'base URL for assets',
+                'assets_version' => 'base version for assets',
+                'extensions' => [],
+                'runtime_loaders' => [],
+                'globals' => ['ga_tracking' => 'UA-XXXXX-X'],
+                'timezone' => 'default timezone identifier, e.g.: America/New_York',
+            ],
+        ];
+
+        $mergedConfig = TwigRendererFactory::mergeConfig($config);
+
+        $this->assertArrayHasKey('extension', $mergedConfig);
+        $this->assertArrayHasKey('paths', $mergedConfig);
+        $this->assertArrayHasKey('cache_dir', $mergedConfig);
+        $this->assertArrayHasKey('assets_version', $mergedConfig);
+        $this->assertArrayHasKey('runtime_loaders', $mergedConfig);
+        $this->assertArrayHasKey('globals', $mergedConfig);
+        $this->assertArrayHasKey('timezone', $mergedConfig);
     }
 }
