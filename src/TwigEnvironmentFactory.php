@@ -21,6 +21,14 @@ use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_numeric;
+use function is_object;
+use function is_string;
+use function sprintf;
+
 /**
  * Create and return a Twig Environment instance.
  *

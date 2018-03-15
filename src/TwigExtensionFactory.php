@@ -14,6 +14,8 @@ use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\Exception\InvalidConfigException;
 
+use function sprintf;
+
 class TwigExtensionFactory
 {
     public function __invoke(ContainerInterface $container) : TwigExtension

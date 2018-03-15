@@ -17,6 +17,11 @@ use Zend\Expressive\Template\DefaultParamsTrait;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
+use function is_string;
+use function preg_match;
+use function preg_replace;
+use function sprintf;
+
 /**
  * Template implementation bridging twig/twig
  */
