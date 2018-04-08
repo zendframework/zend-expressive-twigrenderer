@@ -17,6 +17,7 @@ use Twig_Extension_Core as TwigExtensionCore;
 use Twig_Extension_Debug as TwigExtensionDebug;
 use Twig_ExtensionInterface as TwigExtensionInterface;
 use Twig_Loader_Filesystem as TwigLoader;
+use Twig_NodeVisitor_Optimizer as TwigOptimizer;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -96,6 +97,8 @@ class TwigEnvironmentFactory
             'debug'            => $debug,
             'strict_variables' => $debug,
             'auto_reload'      => $debug,
+            'optimizations'    => $config['optimizations'] ?? TwigOptimizer::OPTIMIZE_ALL,
+            'autoescape'       => $config['autoescape'] ?? 'html',
         ]);
 
         if (isset($config['timezone'])) {
