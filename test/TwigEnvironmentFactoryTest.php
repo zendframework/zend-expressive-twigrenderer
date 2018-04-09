@@ -15,6 +15,8 @@ use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use Twig_Environment as TwigEnvironment;
 use Twig_Extension_Core as TwigExtensionCore;
+use Twig_Extension_Escaper as TwigExtensionEscaper;
+use Twig_Extension_Optimizer as TwigExtensionOptimizer;
 use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
@@ -324,5 +326,42 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertInstanceOf(TwigEnvironment::class, $environment);
         $this->assertEquals('bar-runtime', $environment->getRuntime('Test\Runtime\BarRuntime'));
         $this->assertEquals('foo-runtime', $environment->getRuntime('Test\Runtime\FooRuntime'));
+    }
+
+    public function testUsesOptimizationsConfiguration()
+    {
+        $config = [
+            'twig' => [
+                'optimizations' => 0,
+            ]
+        ];
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+        $factory     = new TwigEnvironmentFactory();
+        $environment = $factory($this->container->reveal());
+
+        $extension = $environment->getExtension(TwigExtensionOptimizer::class);
+        $property = new \ReflectionProperty($extension, 'optimizers');
+        $property->setAccessible(true);
+
+        $this->assertSame(0, $property->getValue($extension));
+    }
+
+    public function testUsesAutoescapeConfiguration()
+    {
+        $config = [
+            'twig' => [
+                'autoescape' => false,
+            ]
+        ];
+
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+        $factory     = new TwigEnvironmentFactory();
+        $environment = $factory($this->container->reveal());
+        $extension = $environment->getExtension(TwigExtensionEscaper::class);
+        $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
 }

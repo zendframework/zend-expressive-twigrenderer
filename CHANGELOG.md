@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.1.0 - TBD
+
+### Added
+
+- [#46](https://github.com/zendframework/zend-expressive-twigrenderer/pull/46)
+  adds two new configuration options (under the `twig` top-level configuration
+  key) for the `TwigEnvironment`:
+
+  - `optimizations` allows enabling or disabling optimizations, and may be the
+    integer `-1` (enable all optimizations) or `0` (disable optimizations); the
+    default is `-1`.
+
+  - `autoescape` allows specyfing the auto-escaping strategy to use, and may be
+    one of html, js, css, url, html_attr, or false; the default is "html".
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 2.0.1 - TBD
 
 ### Added
