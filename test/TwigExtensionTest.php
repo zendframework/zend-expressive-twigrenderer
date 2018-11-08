@@ -11,7 +11,7 @@ namespace ZendTest\Expressive\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
-use Twig_SimpleFunction as SimpleFunction;
+use Twig\TwigFunction;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\TwigExtension;
@@ -45,7 +45,7 @@ class TwigExtensionTest extends TestCase
     public function findFunction($name, array $functions)
     {
         foreach ($functions as $function) {
-            $this->assertInstanceOf(SimpleFunction::class, $function);
+            $this->assertInstanceOf(TwigFunction::class, $function);
             if ($function->getName() === $name) {
                 return $function;
             }
@@ -58,7 +58,7 @@ class TwigExtensionTest extends TestCase
     {
         $message  = $message ?: sprintf('Failed to identify function by name %s', $name);
         $function = $this->findFunction($name, $functions);
-        $this->assertInstanceOf(SimpleFunction::class, $function, $message);
+        $this->assertInstanceOf(TwigFunction::class, $function, $message);
     }
 
     public function testRegistersTwigFunctions()

@@ -11,7 +11,8 @@ namespace Zend\Expressive\Twig;
 
 use ArrayObject;
 use Psr\Container\ContainerInterface;
-use Twig_Environment as TwigEnvironment;
+use Twig\Error\LoaderError;
+use Twig\Environment;
 
 use function array_replace_recursive;
 use function get_class;
@@ -29,7 +30,10 @@ use const E_USER_DEPRECATED;
 class TwigRendererFactory
 {
     /**
-     * @throws Exception\InvalidConfigException for invalid config service values.
+     * @param ContainerInterface $container
+     *
+     * @return TwigRenderer
+     * @throws LoaderError
      */
     public function __invoke(ContainerInterface $container) : TwigRenderer
     {
@@ -48,6 +52,9 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
+     *
+     * @return array
+     *
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
@@ -81,11 +88,16 @@ class TwigRendererFactory
      * notice indicating the developer should update their configuration.
      *
      * If the service is registered, it is simply pulled and returned.
+     *
+     * @param ContainerInterface $container
+     *
+     * @return Environment
+     * @throws LoaderError
      */
-    private function getEnvironment(ContainerInterface $container) : TwigEnvironment
+    private function getEnvironment(ContainerInterface $container) : Environment
     {
-        if ($container->has(TwigEnvironment::class)) {
-            return $container->get(TwigEnvironment::class);
+        if ($container->has(Environment::class)) {
+            return $container->get(Environment::class);
         }
 
         trigger_error(sprintf(
@@ -93,7 +105,7 @@ class TwigRendererFactory
             . 'please update your dependency configuration.',
             __CLASS__,
             TwigEnvironmentFactory::class,
-            TwigEnvironment::class
+            Environment::class
         ), E_USER_DEPRECATED);
 
         $factory = new TwigEnvironmentFactory();

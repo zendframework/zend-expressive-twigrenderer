@@ -28,10 +28,10 @@ class ConfigProvider
         return [
             'aliases'   => [
                 TemplateRendererInterface::class => TwigRenderer::class,
-                Environment::class => Twig_Environment::class
+                Twig_Environment::class => Environment::class
             ],
             'factories' => [
-                Twig_Environment::class => TwigEnvironmentFactory::class,
+                Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class    => TwigExtensionFactory::class,
                 TwigRenderer::class     => TwigRendererFactory::class,
             ],

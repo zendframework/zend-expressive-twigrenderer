@@ -34,6 +34,8 @@ class ConfigProviderTest extends TestCase
 
     /**
      * @depends testInvocationReturnsArray
+     *
+     * @param array $config
      */
     public function testReturnedArrayContainsDependencies(array $config) : void
     {

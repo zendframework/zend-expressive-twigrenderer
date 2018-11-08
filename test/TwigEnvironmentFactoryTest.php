@@ -13,11 +13,11 @@ use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
-use Twig_Environment as TwigEnvironment;
-use Twig_Extension_Core as TwigExtensionCore;
-use Twig_Extension_Escaper as TwigExtensionEscaper;
-use Twig_Extension_Optimizer as TwigExtensionOptimizer;
-use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
+use Twig\Environment as TwigEnvironment;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
+use Twig\Extension\OptimizerExtension;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\Exception\InvalidConfigException;
@@ -208,7 +208,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has(UrlHelper::class)->willReturn(false);
         $factory = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
-        $fetchedTz = $environment->getExtension(TwigExtensionCore::class)->getTimezone();
+        $fetchedTz = $environment->getExtension(CoreExtension::class)->getTimezone();
         $this->assertEquals(new DateTimeZone($tz), $fetchedTz);
     }
 
@@ -295,11 +295,11 @@ class TwigEnvironmentFactoryTest extends TestCase
 
     public function testInjectsCustomRuntimeLoadersIntoTwigEnvironment()
     {
-        $fooRuntime = $this->prophesize(TwigRuntimeLoaderInterface::class);
+        $fooRuntime = $this->prophesize(RuntimeLoaderInterface::class);
         $fooRuntime->load('Test\Runtime\FooRuntime')->willReturn('foo-runtime');
         $fooRuntime->load('Test\Runtime\BarRuntime')->willReturn(null);
 
-        $barRuntime = $this->prophesize(TwigRuntimeLoaderInterface::class);
+        $barRuntime = $this->prophesize(RuntimeLoaderInterface::class);
         $barRuntime->load('Test\Runtime\BarRuntime')->willReturn('bar-runtime');
         $barRuntime->load('Test\Runtime\FooRuntime')->willReturn(null);
 
@@ -341,7 +341,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
-        $extension = $environment->getExtension(TwigExtensionOptimizer::class);
+        $extension = $environment->getExtension(OptimizerExtension::class);
         $property = new \ReflectionProperty($extension, 'optimizers');
         $property->setAccessible(true);
 
@@ -361,7 +361,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->container->has(TwigExtension::class)->willReturn(false);
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
-        $extension = $environment->getExtension(TwigExtensionEscaper::class);
+        $extension = $environment->getExtension(EscaperExtension::class);
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
 }

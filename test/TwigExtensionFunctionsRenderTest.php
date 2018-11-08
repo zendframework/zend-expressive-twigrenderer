@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace ZendTest\Expressive\Twig;
 
 use PHPUnit\Framework\TestCase;
-use Twig_Environment;
-use Twig_Loader_Array;
-use Twig_LoaderInterface;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\LoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Twig\TwigExtension;
@@ -26,7 +26,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     protected function setUp()
     {
-        $this->twigLoader      = $this->prophesize(Twig_LoaderInterface::class);
+        $this->twigLoader      = $this->prophesize(LoaderInterface::class);
         $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
         $this->urlHelper       = $this->prophesize(UrlHelper::class);
 
@@ -38,13 +38,14 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     /**
      * @param string $assetsUrl
      * @param string $assetsVersion
-     * @return Twig_Environment
+     *
+     * @return Environment
      */
     protected function getTwigEnvironment($assetsUrl = '', $assetsVersion = '')
     {
-        $loader = new Twig_Loader_Array($this->templates);
+        $loader = new ArrayLoader($this->templates);
 
-        $twig = new Twig_Environment($loader, ['debug' => true, 'cache' => false]);
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
         $twig->addExtension(new TwigExtension(
             $this->serverUrlHelper->reveal(),
             $this->urlHelper->reveal(),
@@ -59,7 +60,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     {
         $twig = $this->getTwigEnvironment();
 
-        $this->assertInstanceOf(Twig_Environment::class, $twig);
+        $this->assertInstanceOf(Environment::class, $twig);
     }
 
     /**

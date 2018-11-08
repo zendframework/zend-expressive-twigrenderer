@@ -41,6 +41,8 @@ class ExceptionTest extends TestCase
 
     /**
      * @dataProvider exception
+     *
+     * @param string $exception
      */
     public function testExceptionIsInstanceOfExceptionInterface(string $exception) : void
     {

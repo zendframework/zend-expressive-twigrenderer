@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
-use Twig_Environment as TwigEnvironment;
+use Twig\Environment;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplatePath;
@@ -134,8 +134,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironment::class)->willReturn(true);
-        $this->container->get(TwigEnvironment::class)->willReturn(
+        $this->container->has(Environment::class)->willReturn(true);
+        $this->container->get(Environment::class)->willReturn(
             $environment($this->container->reveal())
         );
 
@@ -171,8 +171,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironment::class)->willReturn(true);
-        $this->container->get(TwigEnvironment::class)->willReturn(
+        $this->container->has(Environment::class)->willReturn(true);
+        $this->container->get(Environment::class)->willReturn(
             $environment($this->container->reveal())
         );
         $factory = new TwigRendererFactory();
@@ -194,8 +194,8 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
         $environment = new TwigEnvironmentFactory();
-        $this->container->has(TwigEnvironment::class)->willReturn(true);
-        $this->container->get(TwigEnvironment::class)->willReturn(
+        $this->container->has(Environment::class)->willReturn(true);
+        $this->container->get(Environment::class)->willReturn(
             $environment($this->container->reveal())
         );
         $factory = new TwigRendererFactory();
@@ -224,12 +224,12 @@ class TwigRendererFactoryTest extends TestCase
         $this->container->has(TwigExtension::class)->willReturn(false);
         $this->container->has(ServerUrlHelper::class)->willReturn(false);
         $this->container->has(UrlHelper::class)->willReturn(false);
-        $this->container->has(TwigEnvironment::class)->willReturn(false);
+        $this->container->has(Environment::class)->willReturn(false);
 
         $factory = new TwigRendererFactory();
 
         $this->errorHandler = set_error_handler(function ($errno, $errstr) {
-            $this->assertContains(TwigEnvironment::class, $errstr);
+            $this->assertContains(Environment::class, $errstr);
             return true;
         }, E_USER_DEPRECATED);
 

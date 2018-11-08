@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace ZendTest\Expressive\Twig\TestAsset\Extension;
 
-class BarTwigExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class BarTwigExtension extends AbstractExtension
 {
-    public function getName()
+    public function getName(): string
     {
         return 'bar-twig-extension';
     }

@@ -10,8 +10,11 @@ declare(strict_types=1);
 namespace Zend\Expressive\Twig;
 
 use LogicException;
-use Twig_Environment as TwigEnvironment;
-use Twig_Loader_Filesystem as TwigFilesystem;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Loader\FilesystemLoader;
 use Zend\Expressive\Template\ArrayParametersTrait;
 use Zend\Expressive\Template\DefaultParamsTrait;
 use Zend\Expressive\Template\TemplatePath;
@@ -36,16 +39,16 @@ class TwigRenderer implements TemplateRendererInterface
     private $suffix;
 
     /**
-     * @var TwigFilesystem
+     * @var FilesystemLoader
      */
     protected $twigLoader;
 
     /**
-     * @var TwigEnvironment
+     * @var Environment
      */
     protected $template;
 
-    public function __construct(TwigEnvironment $template = null, string $suffix = 'html')
+    public function __construct(Environment $template = null, string $suffix = 'html')
     {
         if (null === $template) {
             $template = $this->createTemplate($this->getDefaultLoader());
@@ -65,25 +68,34 @@ class TwigRenderer implements TemplateRendererInterface
 
     /**
      * Create a default Twig environment
+     *
+     * @param FilesystemLoader $loader
+     *
+     * @return Environment
      */
-    private function createTemplate(TwigFilesystem $loader) : TwigEnvironment
+    private function createTemplate(FilesystemLoader $loader) : Environment
     {
-        return new TwigEnvironment($loader);
+        return new Environment($loader);
     }
 
     /**
      * Get the default loader for template
      */
-    private function getDefaultLoader() : TwigFilesystem
+    private function getDefaultLoader() : FilesystemLoader
     {
-        return new TwigFilesystem();
+        return new FilesystemLoader();
     }
 
     /**
      * Render
      *
+     * @param string       $name
      * @param array|object $params
-     * @throws \Zend\Expressive\Template\Exception\InvalidArgumentException for non-array, non-object parameters.
+     *
+     * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function render(string $name, $params = []) : string
     {
@@ -100,10 +112,15 @@ class TwigRenderer implements TemplateRendererInterface
 
     /**
      * Add a path for template
+     *
+     * @param string      $path
+     * @param string|null $namespace
+     *
+     * @throws LoaderError
      */
     public function addPath(string $path, string $namespace = null) : void
     {
-        $namespace = $namespace ?: TwigFilesystem::MAIN_NAMESPACE;
+        $namespace = $namespace ?: FilesystemLoader::MAIN_NAMESPACE;
         $this->twigLoader->addPath($path, $namespace);
     }
 
@@ -116,7 +133,7 @@ class TwigRenderer implements TemplateRendererInterface
     {
         $paths = [];
         foreach ($this->twigLoader->getNamespaces() as $namespace) {
-            $name = ($namespace !== TwigFilesystem::MAIN_NAMESPACE) ? $namespace : null;
+            $name = ($namespace !== FilesystemLoader::MAIN_NAMESPACE) ? $namespace : null;
 
             foreach ($this->twigLoader->getPaths($namespace) as $path) {
                 $paths[] = new TemplatePath($path, $name);
@@ -130,6 +147,10 @@ class TwigRenderer implements TemplateRendererInterface
      *
      * Normalizes templates in the format "namespace::template" to
      * "@namespace/template".
+     *
+     * @param string $template
+     *
+     * @return string
      */
     public function normalizeTemplate(string $template) : string
     {

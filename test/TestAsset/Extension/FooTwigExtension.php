@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace ZendTest\Expressive\Twig\TestAsset\Extension;
 
-class FooTwigExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class FooTwigExtension extends AbstractExtension
 {
-    public function getName()
+    public function getName(): string
     {
         return 'foo-twig-extension';
     }

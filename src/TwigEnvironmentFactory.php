@@ -12,13 +12,14 @@ namespace Zend\Expressive\Twig;
 use ArrayObject;
 use DateTimeZone;
 use Psr\Container\ContainerInterface;
-use Twig_Environment as TwigEnvironment;
-use Twig_Extension_Core as TwigExtensionCore;
-use Twig_Extension_Debug as TwigExtensionDebug;
-use Twig_ExtensionInterface as TwigExtensionInterface;
-use Twig_Loader_Filesystem as TwigLoader;
-use Twig_NodeVisitor_Optimizer as TwigOptimizer;
-use Twig_RuntimeLoaderInterface as TwigRuntimeLoaderInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\DebugExtension;
+use Twig\Extension\ExtensionInterface;
+use Twig\Loader\FilesystemLoader;
+use Twig\NodeVisitor\OptimizerNodeVisitor;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 
@@ -74,9 +75,12 @@ use function sprintf;
 class TwigEnvironmentFactory
 {
     /**
-     * @throws Exception\InvalidConfigException for invalid config service values.
+     * @param ContainerInterface $container
+     *
+     * @return Environment
+     * @throws LoaderError
      */
-    public function __invoke(ContainerInterface $container) : TwigEnvironment
+    public function __invoke(ContainerInterface $container) : Environment
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
@@ -93,13 +97,13 @@ class TwigEnvironmentFactory
         $cacheDir = $config['cache_dir'] ?? false;
 
         // Create the engine instance
-        $loader      = new TwigLoader();
-        $environment = new TwigEnvironment($loader, [
+        $loader      = new FilesystemLoader();
+        $environment = new Environment($loader, [
             'cache'            => $debug ? false : $cacheDir,
             'debug'            => $debug,
             'strict_variables' => $debug,
             'auto_reload'      => $debug,
-            'optimizations'    => $config['optimizations'] ?? TwigOptimizer::OPTIMIZE_ALL,
+            'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
             'autoescape'       => $config['autoescape'] ?? 'html',
         ]);
 
@@ -113,7 +117,7 @@ class TwigEnvironmentFactory
             } catch (\Exception $e) {
                 throw new Exception\InvalidConfigException(sprintf('Unknown or invalid timezone: "%s"', $timezone));
             }
-            $environment->getExtension(TwigExtensionCore::class)->setTimezone($timezone);
+            $environment->getExtension(CoreExtension::class)->setTimezone($timezone);
         }
 
         // Add expressive twig extension if requirements are met
@@ -126,7 +130,7 @@ class TwigEnvironmentFactory
 
         // Add debug extension
         if ($debug) {
-            $environment->addExtension(new TwigExtensionDebug());
+            $environment->addExtension(new DebugExtension());
         }
 
         // Add user defined extensions
@@ -145,7 +149,7 @@ class TwigEnvironmentFactory
         $allPaths = isset($config['paths']) && is_array($config['paths']) ? $config['paths'] : [];
         foreach ($allPaths as $namespace => $paths) {
             $namespace = is_numeric($namespace) ? null : $namespace;
-            $namespace = $namespace ?: TwigLoader::MAIN_NAMESPACE;
+            $namespace = $namespace ?: FilesystemLoader::MAIN_NAMESPACE;
             foreach ((array) $paths as $path) {
                 $loader->addPath($path, $namespace);
             }
@@ -158,11 +162,12 @@ class TwigEnvironmentFactory
     /**
      * Inject extensions into the TwigEnvironment instance.
      *
-     * @throws Exception\InvalidExtensionException if any extension provided or
-     *     retrieved does not implement TwigExtensionInterface.
+     * @param Environment        $environment
+     * @param ContainerInterface $container
+     * @param array              $extensions
      */
     private function injectExtensions(
-        TwigEnvironment $environment,
+        Environment $environment,
         ContainerInterface $container,
         array $extensions
     ) : void {
@@ -180,23 +185,25 @@ class TwigEnvironmentFactory
      *
      * If the extension is a string service name, retrieves it from the container.
      *
-     * If the extension is not a TwigExtensionInterface, raises an exception.
+     * If the extension is not an ExtensionInterface, raises an exception.
      *
-     * @param string|TwigExtensionInterface $extension
-     * @throws Exception\InvalidExtensionException if the extension provided or
-     *     retrieved does not implement TwigExtensionInterface.
+     * @param string|ExtensionInterface $extension
+     *
+     * @param ContainerInterface        $container
+     *
+     * @return ExtensionInterface
      */
-    private function loadExtension($extension, ContainerInterface $container) : TwigExtensionInterface
+    private function loadExtension($extension, ContainerInterface $container): ExtensionInterface
     {
         // Load the extension from the container if present
         if (is_string($extension) && $container->has($extension)) {
             $extension = $container->get($extension);
         }
 
-        if (! $extension instanceof TwigExtensionInterface) {
+        if (! $extension instanceof ExtensionInterface) {
             throw new Exception\InvalidExtensionException(sprintf(
                 'Twig extension must be an instance of %s; "%s" given,',
-                TwigExtensionInterface::class,
+                ExtensionInterface::class,
                 is_object($extension) ? get_class($extension) : gettype($extension)
             ));
         }
@@ -207,11 +214,12 @@ class TwigEnvironmentFactory
     /**
      * Inject Runtime Loaders into the TwigEnvironment instance.
      *
-     * @throws Exception\InvalidRuntimeLoaderException if a given runtime loader
-     *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
+     * @param Environment        $environment
+     * @param ContainerInterface $container
+     * @param array              $runtimes
      */
     private function injectRuntimeLoaders(
-        TwigEnvironment $environment,
+        Environment $environment,
         ContainerInterface $container,
         array $runtimes
     ) : void {
@@ -222,21 +230,23 @@ class TwigEnvironmentFactory
     }
 
     /**
-     * @param string|TwigRuntimeLoaderInterface $runtimeLoader
-     * @throws Exception\InvalidRuntimeLoaderException if a given $runtimeLoader
-     *     or the service it represents is not a TwigRuntimeLoaderInterface instance.
+     * @param string|RuntimeLoaderInterface $runtimeLoader
+     *
+     * @param ContainerInterface            $container
+     *
+     * @return RuntimeLoaderInterface
      */
-    private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container) : TwigRuntimeLoaderInterface
+    private function loadRuntimeLoader($runtimeLoader, ContainerInterface $container): RuntimeLoaderInterface
     {
         // Load the runtime loader from the container
         if (is_string($runtimeLoader) && $container->has($runtimeLoader)) {
             $runtimeLoader = $container->get($runtimeLoader);
         }
 
-        if (! $runtimeLoader instanceof TwigRuntimeLoaderInterface) {
+        if (! $runtimeLoader instanceof RuntimeLoaderInterface) {
             throw new Exception\InvalidRuntimeLoaderException(sprintf(
                 'Twig runtime loader must be an instance of %s; "%s" given,',
-                TwigRuntimeLoaderInterface::class,
+                RuntimeLoaderInterface::class,
                 is_object($runtimeLoader) ? get_class($runtimeLoader) : gettype($runtimeLoader)
             ));
         }

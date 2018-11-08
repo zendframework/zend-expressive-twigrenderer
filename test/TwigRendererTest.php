@@ -11,8 +11,8 @@ namespace ZendTest\Expressive\Twig;
 
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use Zend\Expressive\Template\Exception;
 use Zend\Expressive\Template\TemplatePath;
 use Zend\Expressive\Twig\TwigRenderer;
@@ -26,19 +26,19 @@ use function var_export;
 class TwigRendererTest extends TestCase
 {
     /**
-     * @var Twig_Loader_Filesystem
+     * @var FilesystemLoader
      */
     private $twigFilesystem;
 
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     private $twigEnvironment;
 
     public function setUp()
     {
-        $this->twigFilesystem  = new Twig_Loader_Filesystem();
-        $this->twigEnvironment = new Twig_Environment($this->twigFilesystem);
+        $this->twigFilesystem  = new FilesystemLoader();
+        $this->twigEnvironment = new Environment($this->twigFilesystem);
     }
 
     public function assertTemplatePath($path, TemplatePath $templatePath, $message = null)
