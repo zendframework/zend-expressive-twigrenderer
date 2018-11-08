@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Zend\Expressive\Twig;
 
 use Twig_Environment;
+use Twig\Environment;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class ConfigProvider
@@ -27,6 +28,7 @@ class ConfigProvider
         return [
             'aliases'   => [
                 TemplateRendererInterface::class => TwigRenderer::class,
+                Environment::class => Twig_Environment::class
             ],
             'factories' => [
                 Twig_Environment::class => TwigEnvironmentFactory::class,
