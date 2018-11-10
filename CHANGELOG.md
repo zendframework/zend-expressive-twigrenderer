@@ -10,7 +10,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+-  [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) updates the minimum support twig versions to `^1.34` and `^2.4`.
+
+- [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) modifies all functionality to use namespaced versions of all Twig classes.
+  Users may still reference classes using the previously supported
+  pseudo-namespaces, as they are class aliases for the namespaced versions.
 
 ### Deprecated
 
