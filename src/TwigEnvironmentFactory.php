@@ -195,7 +195,8 @@ class TwigEnvironmentFactory
 
         if (! $extension instanceof TwigExtensionInterface) {
             throw new Exception\InvalidExtensionException(sprintf(
-                'Twig extension must be an instance of Twig_ExtensionInterface; "%s" given,',
+                'Twig extension must be an instance of %s; "%s" given,',
+                TwigExtensionInterface::class,
                 is_object($extension) ? get_class($extension) : gettype($extension)
             ));
         }

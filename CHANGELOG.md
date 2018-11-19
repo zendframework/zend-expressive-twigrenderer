@@ -32,7 +32,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#50](https://github.com/zendframework/zend-expressive-twigrenderer/pull/50) updates an exception message thrown in the `TwigExtensionFactory` to be more consistent with other exceptions raised in the component.
 
 ### Deprecated
 
