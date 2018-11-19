@@ -30,10 +30,9 @@ use const E_USER_DEPRECATED;
 class TwigRendererFactory
 {
     /**
-     * @param ContainerInterface $container
-     *
-     * @return TwigRenderer
      * @throws LoaderError
+     * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
+     *     $config is received.
      */
     public function __invoke(ContainerInterface $container) : TwigRenderer
     {
@@ -52,9 +51,6 @@ class TwigRendererFactory
      * array having precedence.
      *
      * @param array|ArrayObject $config
-     *
-     * @return array
-     *
      * @throws Exception\InvalidConfigException if a non-array, non-ArrayObject
      *     $config is received.
      */
@@ -89,9 +85,6 @@ class TwigRendererFactory
      *
      * If the service is registered, it is simply pulled and returned.
      *
-     * @param ContainerInterface $container
-     *
-     * @return Environment
      * @throws LoaderError
      */
     private function getEnvironment(ContainerInterface $container) : Environment

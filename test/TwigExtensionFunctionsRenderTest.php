@@ -38,7 +38,6 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     /**
      * @param string $assetsUrl
      * @param string $assetsVersion
-     *
      * @return Environment
      */
     protected function getTwigEnvironment($assetsUrl = '', $assetsVersion = '')
@@ -65,20 +64,13 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderPathProvider
-     *
-     * @param string $template
-     * @param string $route
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param null|string $fragment
-     * @param array $options
      */
     public function testPathFunction(
-        $template,
-        $route,
+        string $template,
+        string $route,
         array $routeParams,
         array $queryParams,
-        $fragment,
+        ?string $fragment,
         array $options
     ) {
         $this->templates = [
@@ -139,20 +131,13 @@ class TwigExtensionFunctionsRenderTest extends TestCase
 
     /**
      * @dataProvider renderUrlProvider
-     *
-     * @param string $template
-     * @param string $route
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param null|string $fragment
-     * @param array $options
      */
     public function testUrlFunction(
-        $template,
-        $route,
+        string $template,
+        string $route,
         array $routeParams,
         array $queryParams,
-        $fragment,
+        ?string $fragment,
         array $options
     ) {
         $this->templates = [
