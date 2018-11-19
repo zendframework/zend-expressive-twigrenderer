@@ -2,33 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.2.0 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
--  [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) updates the minimum support twig versions to `^1.34` and `^2.4`.
-
-- [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) modifies all functionality to use namespaced versions of all Twig classes.
-  Users may still reference classes using the previously supported
-  pseudo-namespaces, as they are class aliases for the namespaced versions.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 2.1.1 - TBD
+## 2.2.0 - 2018-11-19
 
 ### Added
 
@@ -37,6 +11,12 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 
 - [#50](https://github.com/zendframework/zend-expressive-twigrenderer/pull/50) updates an exception message thrown in the `TwigExtensionFactory` to be more consistent with other exceptions raised in the component.
+
+- [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) updates the minimum support twig versions to `^1.34` and `^2.4`.
+
+- [#51](https://github.com/zendframework/zend-expressive-twigrenderer/pull/51) modifies all functionality to use namespaced versions of all Twig classes.
+  Users may still reference classes using the previously supported
+  pseudo-namespaces, as they are class aliases for the namespaced versions.
 
 ### Deprecated
 
