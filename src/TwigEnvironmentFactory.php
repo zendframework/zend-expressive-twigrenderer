@@ -65,6 +65,7 @@ use function sprintf;
  *     'timezone' => 'default timezone identifier, e.g.: America/New_York',
  *     'optimizations' => -1, // -1: Enable all (default), 0: disable optimizations
  *     'autoescape' => 'html', // Auto-escaping strategy [html|js|css|url|false]
+ *     'auto_reload' => true, // recompile the template whenever the source code changes
  * ],
  * </code>
  *
