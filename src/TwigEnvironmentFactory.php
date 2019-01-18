@@ -102,7 +102,7 @@ class TwigEnvironmentFactory
             'cache'            => $debug ? false : $cacheDir,
             'debug'            => $debug,
             'strict_variables' => $debug,
-            'auto_reload'      => $debug,
+            'auto_reload'      => $config['auto_reload'] ?? $debug,
             'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
             'autoescape'       => $config['autoescape'] ?? 'html',
         ]);
