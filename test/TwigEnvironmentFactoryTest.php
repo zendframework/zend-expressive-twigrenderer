@@ -375,6 +375,7 @@ class TwigEnvironmentFactoryTest extends TestCase
 
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
 
         $factory     = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
