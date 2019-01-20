@@ -365,7 +365,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
 
-    public function testUsesAutoReloadConfiguration()
+    public function testAutoReloadIgnoreDebugConfiguration()
     {
         $config = [
             'debug' => true,
@@ -385,10 +385,13 @@ class TwigEnvironmentFactoryTest extends TestCase
         $this->assertTrue($environment->isDebug());
     }
 
-    public function testAutoReloadUsesDebugConfiguration()
+    public function testAutoReloadUsesConfiguration()
     {
         $config = [
             'debug' => false,
+            'twig'  => [
+                'auto_reload' => true,
+            ],
         ];
 
         $this->container->has('config')->willReturn(true);
@@ -398,7 +401,7 @@ class TwigEnvironmentFactoryTest extends TestCase
         $factory = new TwigEnvironmentFactory();
         $environment = $factory($this->container->reveal());
 
-        $this->assertFalse($environment->isAutoReload());
+        $this->assertTrue($environment->isAutoReload());
         $this->assertFalse($environment->isDebug());
     }
 }
