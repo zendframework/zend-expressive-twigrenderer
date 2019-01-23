@@ -132,6 +132,7 @@ Optional configuration can be stored in `config/autoload/templates.global.php`.
     'timezone' => 'default timezone identifier, e.g.: America/New_York',
     'optimizations' => -1, // -1: Enable all (default), 0: disable optimizations
     'autoescape' => 'html', // Auto-escaping strategy [html|js|css|url|false]
+    'auto_reload' => true, // Recompile the template whenever the source code changes
 ],
 ```
 
