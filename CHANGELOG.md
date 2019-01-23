@@ -2,33 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.3.0 - TBD
+## 2.3.0 - 2019-01-23
 
 ### Added
 
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 2.2.1 - TBD
-
-### Added
-
-- Nothing.
+- [#53](https://github.com/zendframework/zend-expressive-twigrenderer/pull/53) adds support for the `auto_reload` option to the `TwigEnvironmentFactory`.
+  When provided, Twig will recompile a template whenever it detects the source
+  code has changed. This option should be **disabled** in production.
 
 ### Changed
 
