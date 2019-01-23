@@ -364,4 +364,44 @@ class TwigEnvironmentFactoryTest extends TestCase
         $extension = $environment->getExtension(EscaperExtension::class);
         $this->assertFalse($extension->getDefaultStrategy('template::name'));
     }
+
+    public function testAutoReloadIgnoreDebugConfiguration()
+    {
+        $config = [
+            'debug' => true,
+            'twig'  => [
+                'auto_reload' => false,
+            ],
+        ];
+
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+
+        $factory = new TwigEnvironmentFactory();
+        $environment = $factory($this->container->reveal());
+
+        $this->assertFalse($environment->isAutoReload());
+        $this->assertTrue($environment->isDebug());
+    }
+
+    public function testAutoReloadUsesConfiguration()
+    {
+        $config = [
+            'debug' => false,
+            'twig'  => [
+                'auto_reload' => true,
+            ],
+        ];
+
+        $this->container->has('config')->willReturn(true);
+        $this->container->get('config')->willReturn($config);
+        $this->container->has(TwigExtension::class)->willReturn(false);
+
+        $factory = new TwigEnvironmentFactory();
+        $environment = $factory($this->container->reveal());
+
+        $this->assertTrue($environment->isAutoReload());
+        $this->assertFalse($environment->isDebug());
+    }
 }
