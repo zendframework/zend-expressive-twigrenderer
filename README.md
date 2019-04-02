@@ -133,6 +133,8 @@ Optional configuration can be stored in `config/autoload/templates.global.php`.
     'optimizations' => -1, // -1: Enable all (default), 0: disable optimizations
     'autoescape' => 'html', // Auto-escaping strategy [html|js|css|url|false]
     'auto_reload' => true, // Recompile the template whenever the source code changes
+    'debug' => true, // When set to true, the generated templates have a toString() method
+    'strict_variables' => true, // When set to true, twig throws an exception on invalid variables
 ],
 ```
 
