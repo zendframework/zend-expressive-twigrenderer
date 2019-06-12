@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#59](https://github.com/zendframework/zend-expressive-twigrenderer/pull/57) adds Environment configuration options for 'cache', 'debug' and 'strict_variables'.
+
 - [#57](https://github.com/zendframework/zend-expressive-twigrenderer/pull/57) adds support for PHP 7.3.
 
 ### Changed
