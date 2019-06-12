@@ -6,28 +6,6 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 2.3.1 - TBD
-
-### Added
-
 - [#57](https://github.com/zendframework/zend-expressive-twigrenderer/pull/57) adds support for PHP 7.3.
 
 ### Changed
