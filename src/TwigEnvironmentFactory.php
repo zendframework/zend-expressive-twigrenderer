@@ -95,14 +95,13 @@ class TwigEnvironmentFactory
 
         $debug    = (bool) ($config['debug'] ?? false);
         $config   = TwigRendererFactory::mergeConfig($config);
-        $cacheDir = $config['cache_dir'] ?? false;
 
         // Create the engine instance
         $loader      = new FilesystemLoader();
         $environment = new Environment($loader, [
-            'cache'            => $debug ? false : $cacheDir,
-            'debug'            => $debug,
-            'strict_variables' => $debug,
+            'cache'            => $config['cache_dir'] ?? false,
+            'debug'            => $config['debug'] ?? $debug,
+            'strict_variables' => $config['strict_variables'] ?? $debug,
             'auto_reload'      => $config['auto_reload'] ?? $debug,
             'optimizations'    => $config['optimizations'] ?? OptimizerNodeVisitor::OPTIMIZE_ALL,
             'autoescape'       => $config['autoescape'] ?? 'html',
