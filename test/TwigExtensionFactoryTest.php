@@ -37,7 +37,7 @@ class TwigExtensionFactoryTest extends TestCase
      */
     private $urlHelper;
 
-    public function setUp()
+    protected function setUp() : void
     {
         $this->container       = $this->prophesize(ContainerInterface::class);
         $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
