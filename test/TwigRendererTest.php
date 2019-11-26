@@ -35,7 +35,7 @@ class TwigRendererTest extends TestCase
      */
     private $twigEnvironment;
 
-    public function setUp()
+    protected function setUp() : void
     {
         $this->twigFilesystem  = new FilesystemLoader();
         $this->twigEnvironment = new Environment($this->twigFilesystem);
@@ -97,7 +97,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
         $paths = $renderer->getPaths();
-        $this->assertInternalType('array', $paths);
+        $this->assertIsArray($paths);
         $this->assertCount(1, $paths);
         $this->assertTemplatePath(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertTemplatePathString(__DIR__ . '/TestAsset', $paths[0]);
@@ -109,7 +109,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset', 'test');
         $paths = $renderer->getPaths();
-        $this->assertInternalType('array', $paths);
+        $this->assertIsArray($paths);
         $this->assertCount(1, $paths);
         $this->assertTemplatePath(__DIR__ . '/TestAsset', $paths[0]);
         $this->assertTemplatePathString(__DIR__ . '/TestAsset', $paths[0]);
@@ -122,7 +122,7 @@ class TwigRendererTest extends TestCase
         $renderer->addPath(__DIR__ . '/TestAsset');
         $name = 'Twig';
         $result = $renderer->render('twig.html', [ 'name' => $name ]);
-        $this->assertContains($name, $result);
+        $this->assertStringContainsString($name, $result);
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $name, $content);
         $this->assertEquals($content, $result);
@@ -186,7 +186,7 @@ class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer();
         $renderer->addPath(__DIR__ . '/TestAsset');
         $result = $renderer->render('twig.html', $params);
-        $this->assertContains($search, $result);
+        $this->assertStringContainsString($search, $result);
         $content = file_get_contents(__DIR__ . '/TestAsset/twig.html');
         $content = str_replace('{{ name }}', $search, $content);
         $this->assertEquals($content, $result);

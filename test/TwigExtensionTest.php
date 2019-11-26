@@ -26,7 +26,7 @@ class TwigExtensionTest extends TestCase
     /** @var UrlHelper|ProphecyInterface */
     private $urlHelper;
 
-    public function setUp()
+    protected function setUp() : void
     {
         $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);
         $this->urlHelper = $this->prophesize(UrlHelper::class);

@@ -17,7 +17,7 @@
         "issues": "https://github.com/zendframework/zend-expressive-twigrenderer/issues",
         "source": "https://github.com/zendframework/zend-expressive-twigrenderer",
         "rss": "https://github.com/zendframework/zend-expressive-twigrenderer/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
+        "chat": "https://zendframework-slack.herokuapp.com",
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
     "require": {
@@ -30,7 +30,7 @@
     },
     "require-dev": {
         "malukenho/docheader": "^0.1.5",
-        "phpunit/phpunit": "^7.0.2",
+        "phpunit/phpunit": "^7.5.17 || ^8.4.3",
         "zendframework/zend-coding-standard": "~1.0.0"
     },
     "conflict": {
@@ -51,8 +51,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.4.x-dev",
-            "dev-develop": "2.5.x-dev"
+            "dev-master": "2.5.x-dev",
+            "dev-develop": "2.6.x-dev"
         },
         "zf": {
             "config-provider": "Zend\\Expressive\\Twig\\ConfigProvider"
