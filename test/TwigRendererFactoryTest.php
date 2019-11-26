@@ -41,13 +41,13 @@ class TwigRendererFactoryTest extends TestCase
      */
     private $errorHandler;
 
-    public function setUp()
+    protected function setUp() : void
     {
         $this->restoreErrorHandler();
         $this->container = $this->prophesize(ContainerInterface::class);
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         $this->restoreErrorHandler();
     }
@@ -154,7 +154,7 @@ class TwigRendererFactoryTest extends TestCase
     public function testUnconfiguredTwigInstanceContainsNoPaths(TwigRenderer $twig)
     {
         $paths = $twig->getPaths();
-        $this->assertInternalType('array', $paths);
+        $this->assertIsArray($paths);
         $this->assertEmpty($paths);
     }
 
@@ -229,7 +229,7 @@ class TwigRendererFactoryTest extends TestCase
         $factory = new TwigRendererFactory();
 
         $this->errorHandler = set_error_handler(function ($errno, $errstr) {
-            $this->assertContains(Environment::class, $errstr);
+            $this->assertStringContainsString(Environment::class, $errstr);
             return true;
         }, E_USER_DEPRECATED);
 

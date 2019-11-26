@@ -24,7 +24,7 @@ class TwigExtensionFunctionsRenderTest extends TestCase
     protected $serverUrlHelper;
     protected $urlHelper;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->twigLoader      = $this->prophesize(LoaderInterface::class);
         $this->serverUrlHelper = $this->prophesize(ServerUrlHelper::class);

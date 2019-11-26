@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.5.0 - TBD
+## 2.5.0 - 2019-11-26
 
 ### Added
 
@@ -24,33 +24,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 2.4.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
 ## 2.4.0 - 2019-06-12
 
 ### Added
 
-- [#59](https://github.com/zendframework/zend-expressive-twigrenderer/pull/57) adds Environment configuration options for 'cache', 'debug' and 'strict_variables'.
+- [#59](https://github.com/zendframework/zend-expressive-twigrenderer/pull/59) adds Environment configuration options for 'cache', 'debug' and 'strict_variables'.
 
 - [#57](https://github.com/zendframework/zend-expressive-twigrenderer/pull/57) adds support for PHP 7.3.
 
