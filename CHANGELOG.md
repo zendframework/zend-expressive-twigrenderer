@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.5.0 - TBD
+
+### Added
+
+- [#60](https://github.com/zendframework/zend-expressive-twigrenderer/pull/60) adds compatibility with twig/twig `^3.0`.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 2.4.1 - TBD
 
 ### Added
