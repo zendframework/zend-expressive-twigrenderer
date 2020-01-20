@@ -2,7 +2,7 @@
 
 > ## Repository abandoned 2019-12-31
 >
-> This repository has moved to mezzio/mezzio-twigrenderer.
+> This repository has moved to [mezzio/mezzio-twigrenderer](https://github.com/mezzio/mezzio-twigrenderer).
 
 [![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-twigrenderer)
 [![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-twigrenderer/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-twigrenderer?branch=master)
